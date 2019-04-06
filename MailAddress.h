@@ -1,10 +1,20 @@
 #pragma once
+#include "Property.h"
 #include <string>
 using namespace std;
 
 class MailAddress {
-	string m_Addr;
+  PROPERTY_READ(string, Address)
+
 public:
-	static bool Validate(const string& addr); // TODO: 验证邮箱合法性
-	MailAddress(const string& addr); // TODO: 验证合法性，然后创建
+  static bool Validate(const string &addr); // TODO: 验证邮箱合法性
+
+  MailAddress() {}
+
+  MailAddress(string addr) {
+    if (!Validate(addr)) {
+      throw "Unexpected error. Validate the address first.\n";
+    }
+    m_Address = addr;
+  }
 };
