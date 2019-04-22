@@ -1,0 +1,3 @@
+[submodule "mailio"]
+	path = ThirdParty/mailio
+	url = https://github.com/karastojko/mailio
