@@ -6,17 +6,14 @@
 using namespace std;
 
 class CredentialInfo {
-  PROPERTY_READ(MailAddress, Address)
-  PROPERTY_READ(string, Username)
+  PROPERTY_READ(MailAddress, Username)
   PROPERTY_READ(string, Password)
+  PROPERTY_READ(string, Server)
+  PROPERTY_READ(int, Port)
   // TODO: 其他字段，对接网络邮箱用
 
 public:
-  CredentialInfo() {}
+  CredentialInfo() = default;
 
-  CredentialInfo(MailAddress addr, string username, string password) {
-    m_Address = addr;
-    m_Username = username;
-    m_Password = password;
-  }
+  CredentialInfo(MailAddress username, string password, string server, int port);
 };

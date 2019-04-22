@@ -7,14 +7,12 @@ class MailAddress {
   PROPERTY_READ(string, Address)
 
 public:
-  static bool Validate(const string &addr); // TODO: 验证邮箱合法性
+  static bool Validate(const string &addr);
 
-  MailAddress() {}
+  MailAddress() = default;
 
-  MailAddress(string addr) {
-    if (!Validate(addr)) {
-      throw "Unexpected error. Validate the address first.\n";
-    }
-    m_Address = addr;
-  }
+  MailAddress(string addr);
+
+  // 方便起见，提供到const string&的隐式转换
+  operator const string&() const;
 };

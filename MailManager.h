@@ -11,14 +11,14 @@ class MailManager {
   // TODO: 其他属性？
 
 public:
-  MailManager() {}
+  MailManager() = default;
 
   // 拉取在线邮件，写到本地（SQLite？）
   void FetchMails();
 
-  list<Mail> ListMails(); // 列出所有本地的邮件（给UI用) TODO: 筛选、检索
+  list<Mail> ListMails() const; // 列出所有本地的邮件（给UI用) TODO: 筛选、检索
 
-  void SendMail(const Mail &mail);
+  void SendMail(const Mail &mail) const;
 
   // TODO: 其他
 };

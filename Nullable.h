@@ -11,14 +11,14 @@ public:
 
   Nullable(T value) { SetValue(value); }
 
-  bool HasValue() { return m_HasValue; }
+  bool HasValue() const { return m_HasValue; }
 
   void SetValue(T value) {
     m_HasValue = true;
     m_Value = value;
   }
 
-  const T &GetValue() {
+  const T &GetValue() const {
     if (!m_HasValue)
       throw NullValueException();
     return m_Value;
