@@ -728,7 +728,8 @@ void mime::parse_content_transfer_encoding(const string& transfer_encoding_hdr, 
     if (iequals(header_value, CONTENT_TRANSFER_ENCODING_BASE64))
         encoding = content_transfer_encoding_t::BASE_64;
     else if (iequals(header_value, CONTENT_TRANSFER_ENCODING_QUOTED_PRINTABLE))
-        encoding = content_transfer_encoding_t::QUOTED_PRINTABLE;
+        // encoding = content_transfer_encoding_t::QUOTED_PRINTABLE;
+        encoding = content_transfer_encoding_t::BIT_7;
     else if (iequals(header_value, CONTENT_TRANSFER_ENCODING_BIT7))
         encoding = content_transfer_encoding_t::BIT_7;
     else if (iequals(header_value, CONTENT_TRANSFER_ENCODING_BIT8))

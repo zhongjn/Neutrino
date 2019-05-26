@@ -9,12 +9,17 @@ int main() {
     // UI负责操作MailManager
 
 
-    // 测试
+    // 测试拉取邮件
     MailManager mgr;
 
-    mgr.SetCredential(CredentialInfo(MailAddress("2389206378@qq.com"), "{private_key_here}",
+    mgr.SetCredential(CredentialInfo(MailAddress("2389206378@qq.com"), "{your_private_key}",
         ServerEndPoint("smtp.qq.com", 465), ServerEndPoint("pop.qq.com", 995)));
-    // mgr.SendMail(Mail("Test", "Test Content", MailAddress("2389206378@qq.com"), MailAddress("2389206378@qq.com")));
     mgr.FetchMails();
+    cout << "-------------------" << endl;
+    auto mails = mgr.ListMails();
+    for (auto& m : mails) {
+        cout << m.GetSubject() << endl;
+    }
+    system("pause");
     return 0;
 }

@@ -12,7 +12,7 @@ class MailManager {
   // TODO: ÆäËûÊôĞÔ£¿
 
 private:
-  sqlite3* conn = nullptr;
+  sqlite3* db = nullptr;
 
 public:
   MailManager();
