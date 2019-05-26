@@ -204,7 +204,7 @@ public:
 
     @todo No need for `SUBJECT` line policy.
     **/
-    enum class line_len_policy_t : std::string::size_type {NONE = 2048, RECOMMENDED = 78, MANDATORY = 998};
+    enum class line_len_policy_t : std::string::size_type {NONE = 2048, RECOMMENDED = 2048, MANDATORY = 998};
 
     /**
     Setting the line policy of the codec.
