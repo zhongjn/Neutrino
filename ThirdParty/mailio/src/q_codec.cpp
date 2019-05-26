@@ -15,7 +15,7 @@ copy at http://www.freebsd.org/copyright/freebsd-license.html.
 #include <mailio/base64.hpp>
 #include <mailio/quoted_printable.hpp>
 #include <mailio/q_codec.hpp>
-
+#include <Windows.h>
 
 using boost::iequals;
 using std::string;
@@ -62,7 +62,7 @@ vector<string> q_codec::encode(const string& text) const
     return enc_text;
 }
 
-#include <Windows.h>
+
 string utf8_to_current(const std::string & str)
 {
     int nwLen = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);

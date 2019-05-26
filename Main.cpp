@@ -5,15 +5,16 @@
 using namespace std;
 
 int main() {
-  // TODO: 进入UI函数
-  // UI负责操作MailManager
+    // TODO: 进入UI函数
+    // UI负责操作MailManager
 
 
-  // 测试
-  MailManager mgr;
+    // 测试
+    MailManager mgr;
 
-  mgr.SetCredential(CredentialInfo(MailAddress("example@a.com"), "password",
-                                   ServerEndPoint("smtp.example.com", 123), ServerEndPoint("pop.example.com", 123)));
-  mgr.SendMail(Mail("Test", "Test Content", MailAddress("example@a.com"), MailAddress("example@a.com")));
-  return 0;
+    mgr.SetCredential(CredentialInfo(MailAddress("2389206378@qq.com"), "{private_key_here}",
+        ServerEndPoint("smtp.qq.com", 465), ServerEndPoint("pop.qq.com", 995)));
+    // mgr.SendMail(Mail("Test", "Test Content", MailAddress("2389206378@qq.com"), MailAddress("2389206378@qq.com")));
+    mgr.FetchMails();
+    return 0;
 }

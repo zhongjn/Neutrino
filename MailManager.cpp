@@ -26,6 +26,9 @@ void MailManager::FetchMails() {
                       pop3s::auth_method_t::LOGIN);
 
     auto mails = conn.list(0);
+    message msg;
+    conn.fetch(2, msg, true);
+    int a = 1;
   }
 }
 
