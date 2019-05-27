@@ -1,5 +1,6 @@
 #include "SpamFilter.h"
 
+// TODO: do sth to the ugly overloading
 // vector addition
 template<class T>
 vector<T> operator + (const vector<T> a, const vector<T> b) {
@@ -21,16 +22,46 @@ double operator * (const vector<double> &v, const vector<double> &u) {
   return res;
 }
 
+SpamFilter::SpamFilter() :
+  tp(0), fp(0), fn(0), tn(0) {
+  for (auto i = 0; i < numAttrs; ++i) {
+    attrsHam.push_back(0.0);
+    attrsSpam.push_back(0.0);
+  }
+
+  ifstream infile;
+  infile.open(paramsPath, ios::in);
+  if (!infile) {
+    cout << "training" << endl;
+    Train();
+    cout << "storing" << endl;
+    StoreParams();
+    cout << "testing" << endl;
+    Test();
+  }
+  else
+    LoadParams();
+  
+  infile.close();
+}
+
+SpamFilter::~SpamFilter() {
+}
+
 bool SpamFilter::Predict() {
   bool res = false;
-  // cout << attrs * loglSpam + logpSpam << ' ' << attrs * loglHam + logpHam << endl;
-  if (attrs * loglSpam + logpSpam > attrs * loglHam + logpHam)
+  if (attrs * loglSpam + logpSpam > attrs * loglHam + logpHam) // posteriors
     res = true;
   return res;
 }
 
 bool SpamFilter::Predict(Mail mail) {
+  GetAttrs(mail);
+  return Predict();
+}
 
+void SpamFilter::GetAttrs(Mail mail) {
+  
 }
 
 void SpamFilter::Train() {
@@ -139,32 +170,6 @@ void SpamFilter::Likelihood() {
     loglHam.push_back(log(attrsHam[i] / sumAttrsHam));
     loglSpam.push_back(log(attrsSpam[i] / sumAttrsSpam));
   }
-}
-
-SpamFilter::SpamFilter() :
-  tp(0), fp(0), fn(0), tn(0) {
-  for (auto i = 0; i < numAttrs; ++i) {
-    attrsHam.push_back(0.0);
-    attrsSpam.push_back(0.0);
-  }
-
-  ifstream infile;
-  infile.open(paramsPath, ios::in);
-  if (!infile) {
-    cout << "training" << endl;
-    Train();
-    cout << "storing" << endl;
-    StoreParams();
-    cout << "testing" << endl;
-    Test();
-  }
-  else
-    LoadParams();
-  
-  infile.close();
-}
-
-SpamFilter::~SpamFilter() {
 }
 
 void SpamFilter::StoreParams() {
