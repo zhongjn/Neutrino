@@ -24,13 +24,12 @@ string quote(const T& t) {
 }
 
 void MailManager::FetchMails() {
-    if (m_Credential.HasValue()) {
-        auto &cred = m_Credential.GetValue();
+    if (m_Credential) {
         // TODO: 先拉取邮件头，如果不在数据库里，那么拉取整个
 
-        auto &pop3 = cred.GetPop3();
+        auto &pop3 = m_Credential->GetPop3();
         pop3s conn(pop3.GetIPAddress(), pop3.GetPort());
-        conn.authenticate(cred.GetUsername(), cred.GetPassword(),
+        conn.authenticate(m_Credential->GetUsername(), m_Credential->GetPassword(),
             pop3s::auth_method_t::LOGIN);
 
         auto mails = conn.list(0); // (序号, id）
@@ -78,18 +77,16 @@ list<Mail> MailManager::ListMails() const {
 }
 
 void MailManager::SendMail(const Mail &mail) const {
-    if (m_Credential.HasValue()) {
-        auto &cred = m_Credential.GetValue();
+    if (m_Credential) {
         message msg;
         msg.from(mail_address("SENDER", mail.GetSender().GetAddress()));
         msg.add_recipient(
             mail_address("RECEIVER", mail.GetReceiver().GetAddress()));
         msg.subject(mail.GetSubject());
         msg.content(mail.GetContent());
-
-        auto &smtp = cred.GetSmtp();
+        auto &smtp = m_Credential->GetSmtp();
         smtps conn(smtp.GetIPAddress(), smtp.GetPort());
-        conn.authenticate(cred.GetUsername(), cred.GetPassword(),
+        conn.authenticate(m_Credential->GetUsername(), m_Credential->GetPassword(),
             smtps::auth_method_t::LOGIN);
         conn.submit(msg);
     }
