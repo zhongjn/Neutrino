@@ -21,7 +21,6 @@ public:
   typedef unsigned int uint;
 
   bool Predict(Mail mail);
-  bool Predict();
   SpamFilter();
   ~SpamFilter();
 
@@ -34,13 +33,13 @@ private:
   vector<double> attrsSpam;
   vector<double> loglHam; // log likelihood of ham
   vector<double> loglSpam; // log likelihood of spam
-  uint tp, fp, fn, tn;
+  uint tp, fp, fn, tn; // evaluations
 
   void Train();
   void Test();
+  bool Predict();
   void GetAttrs(Mail mail);
   void StoreParams();
   void LoadParams();
   void Likelihood(); // calculate the likelihood
-  double Posterior();
 };
