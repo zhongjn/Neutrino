@@ -4,12 +4,16 @@
 
 using namespace std;
 
+class Null {};
+
 template <typename T> class Nullable {
     bool has_v = false;
     union { T v; };
 
 public:
     Nullable() {}
+
+    Nullable(Null n) {} // 提供一个免去泛型参数的空初始化
 
     Nullable& operator=(Nullable&& n) noexcept {
         if (&n != this) {
