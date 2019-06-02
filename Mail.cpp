@@ -1,6 +1,7 @@
 #include "Mail.h"
 
-Mail::Mail(string subject, string content, MailAddress sender, MailAddress receiver) {
+Mail::Mail(int id, string subject, string content, MailAddress sender, MailAddress receiver) {
+    m_Id = id;
 	m_Subject = subject;
 	m_Content = content;
 	m_Sender = sender;

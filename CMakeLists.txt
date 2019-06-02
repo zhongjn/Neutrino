@@ -9,6 +9,7 @@ add_executable(
   "Nullable.h"
   "Property.h"
   "CredentialInfo.cpp"
+  "Folder.cpp"
   "IPEndPoint.cpp"
   "Mail.cpp" 
   "MailAddress.cpp" 

@@ -11,6 +11,8 @@ MailManager::MailManager() {
     string sqlCreateMails =
         "CREATE TABLE IF NOT EXISTS mails (id INTEGER PRIMARY KEY AUTOINCREMENT, "
         "subject TEXT, content TEXT, time INTEGER);";
+    string sqlCreateFolders =
+        "";
     sqlite3_exec(db, sqlCreateMails.c_str(), nullptr, nullptr, nullptr);
 }
 
@@ -50,6 +52,9 @@ void MailManager::FetchMails() {
                 cout << "Writing into sqlite: " << msgHeader.subject() << endl;
                 message msg;
                 conn.fetch(i, msg, false);
+
+                // TODO: 判断垃圾邮件
+
                 stringstream sqlInsert;
                 sqlInsert << "INSERT INTO mails (subject, content, time) VALUES (" << quote(msg.subject()) << "," << quote(msg.content()) << "," << quote(time) << ");";
                 char* errmsg;
@@ -63,13 +68,13 @@ void MailManager::FetchMails() {
     }
 }
 
-list<Mail> MailManager::ListMails() const {
+list<Mail> MailManager::ListMails(const ListSource& source, const ListCondition& cond) const {
     // TODO: 收件人、发件人
     list<Mail> lst;
-    string sql = "SELECT subject, content, time FROM mails ORDER BY time DESC;";
+    string sql = "SELECT id, subject, content, time FROM mails ORDER BY time DESC;";
     auto callback = [](void* p, int count, char** values, char** names) -> int {
         auto lst = static_cast<list<Mail>*>(p);
-        lst->push_back(Mail(values[0], values[1], MailAddress("from@example.com"), MailAddress("to@example.com")));
+        lst->push_back(Mail(atoi(values[0]), values[1], values[2], MailAddress("from@example.com"), MailAddress("to@example.com")));
         return 0;
     };
     sqlite3_exec(db, sql.c_str(), callback, &lst, nullptr);
@@ -93,4 +98,27 @@ void MailManager::SendMail(const Mail &mail) const {
     else {
         throw "Credential not set!";
     }
+}
+
+void MailManager::DeleteMail(int id) {
+
+}
+
+void MailManager::SetMailFolder(int mailId, Nullable<int> folderId) {
+}
+
+void MailManager::SetMailSpam(int mailId, bool spam) {
+}
+
+void MailManager::AddFolder(string name) {
+}
+
+void MailManager::DeleteFolder(int id) {
+}
+
+list<Folder> MailManager::ListFolders() {
+    return list<Folder>();
+}
+
+void MailManager::RenameFolder(int id, string name) {
 }
