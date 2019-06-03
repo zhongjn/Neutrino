@@ -36,7 +36,7 @@ vector<double> MailParser::Parse(const Mail &mail) {
   }
   infile.close();
 
-  uint totalWords = 0, totalChars = ss.gcount();
+  uint totalWords = 0, totalChars = text.length();
 
   while (getline(ss, s, ' ')) {
     if (freq.find(s) != freq.end())
@@ -55,9 +55,12 @@ vector<double> MailParser::Parse(const Mail &mail) {
   // count captial run length
   text = mail.GetSubject() + mail.GetContent();
   // preprocessing
-  for (auto it = text.begin(); it != text.end(); ++it)
+  for (auto it = text.begin(); it != text.end();) {
     if (!isalpha(*it))
-      text.erase(it);
+      it = text.erase(it);
+    else
+      ++it;
+  }
   text += 'o'; // tricky, avoid CAPITAL END
 
   uint capRunLenMax = 1, capRunLenSum = 1, capRunLenCur = 1, capRunCnt = 0;
