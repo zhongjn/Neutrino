@@ -18,6 +18,7 @@ public:
   vector<double> Parse(const Mail &mail);
   MailParser();
   ~MailParser();
+
 private:
   const string wordListPath = "spambase/wordlist.txt";
 };
