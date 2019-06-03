@@ -1,3 +1,4 @@
+/*
 #include "MailManager.h"
 #include <iostream>
 #include "ThirdParty/sqlite3/sqlite3.h"
@@ -22,4 +23,19 @@ int main() {
     }
     system("pause");
     return 0;
+}
+*/
+#include "UI/mainwindow.h"
+#include "UI/send.h"
+#include "UI/welcome.h"
+#include "UI/inbox.h"
+#include <QApplication>
+
+int main(int argc, char *argv[])
+{
+	QApplication a(argc, argv);
+	MainWindow w;
+	w.show();
+
+	return a.exec();
 }
