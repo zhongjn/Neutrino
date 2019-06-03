@@ -1,5 +1,7 @@
 #include "MailParser.h"
 
+const string wordListPath = "spambase/wordlist.txt";
+
 MailParser::MailParser() {
 
 }

@@ -1,5 +1,11 @@
 #include "SpamFilter.h"
 
+const string trainPath = "spambase/train.data";
+const string testPath = "spambase/test.data";
+const string paramsPath = "spambase/params";
+const int numAttrs = 57; // number of attributes
+const double bias = 1.0 / 4000; // smoothing
+
 // TODO: do sth to the ugly overloading
 // vector addition
 template<class T>

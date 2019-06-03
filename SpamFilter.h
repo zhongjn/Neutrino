@@ -20,12 +20,6 @@ public:
   ~SpamFilter();
 
 private:
-  const string trainPath = "spambase/train.data";
-  const string testPath = "spambase/test.data";
-  const string paramsPath = "spambase/params";
-  const int numAttrs = 57; // number of attributes
-  const double bias = 1.0 / 4000; // smoothing
-
   vector<double> attrs; // attributes
 
   double logpHam; // log priors
