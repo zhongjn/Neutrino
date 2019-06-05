@@ -10,11 +10,26 @@ using namespace mailio;
 MailManager::MailManager() {
     sqlite3_open("data.db", &db);
     string sqlCreateMails =
-        "CREATE TABLE IF NOT EXISTS mails (id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "subject TEXT, content TEXT, time INTEGER);";
+        "CREATE TABLE IF NOT EXISTS mails ("
+        "   id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "   subject TEXT,"
+        "   content TEXT,"
+        "   time INTEGER,"
+        "   is_spam integer DEFAULT 0,"
+        "   folder_id INTEGER DEFAULT - 1,"
+        "   read integer DEFAULT 0,"
+        "   flag integer DEFAULT 0"
+        ");";
+
     string sqlCreateFolders =
-        "";
+        "CREATE TABLE IF NOT EXISTS folders ("
+        "   id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "   name TEXT"
+        ");";
+
     sqlite3_exec(db, sqlCreateMails.c_str(), nullptr, nullptr, nullptr);
+    sqlite3_exec(db, sqlCreateFolders.c_str(), nullptr, nullptr, nullptr);
+
 }
 
 MailManager::~MailManager() { sqlite3_close(db); }
@@ -70,7 +85,7 @@ void MailManager::FetchMails() {
     }
 }
 
-vector<Mail> MailManager::ListMails(const ListSource & source, const ListCondition & cond) const {
+vector<Mail> MailManager::ListMails(const ListSource& source, const ListCondition& cond) const {
     // TODO: 收件人、发件人
     vector<Mail> lst;
     string sql = "SELECT id, subject, content, time FROM mails ORDER BY time DESC;";
@@ -147,6 +162,6 @@ vector<Folder> MailManager::ListFolders() {
 
 void MailManager::RenameFolder(int id, string name) {
     stringstream ss;
-    ss << "UPDATE folders SET name=" << quote(name) <<" WHERE id=" << id;
+    ss << "UPDATE folders SET name=" << quote(name) << " WHERE id=" << id;
     sqlite3_exec(db, ss.str().c_str(), nullptr, nullptr, nullptr);
 }

@@ -13,8 +13,10 @@ using namespace std;
 struct ListSource {
     enum class Type {
         All,
-        Folder,
-        Spam
+        Unread,
+        Flagged,
+        Spam,
+        Folder
     } type = Type::All;
     // 如果type为Folder，那么folderId需要设置
     int folderId;
