@@ -1,14 +1,22 @@
 #include "SpamFilter.h"
 
+const string trainPath = "spambase/train.data";
+const string testPath = "spambase/test.data";
+const string paramsPath = "spambase/params";
+const int numAttrs = 57; // number of attributes
+const double bias = 1.0 / 4000; // smoothing
+
 // TODO: do sth to the ugly overloading
 // vector addition
 template<class T>
 vector<T> operator + (const vector<T> a, const vector<T> b) {
   if (a.size() != b.size())
     throw "Incompatable sizes";
+
   vector<T> res(a.size(), 0);
   for (auto i = 0; i < a.size(); ++i)
     res[i] = a[i] + b[i];
+
   return res;
 }
 
@@ -17,21 +25,18 @@ double operator * (const vector<double> &v, const vector<double> &u) {
   double res = 0.0;
   if (v.size() != u.size())
     return res;
+    
   for (auto i = 0; i < v.size(); ++i)
     res += v[i] * u[i];
+
   return res;
 }
 
 SpamFilter::SpamFilter() :
   tp(0), fp(0), fn(0), tn(0) {
-  for (auto i = 0; i < numAttrs; ++i) {
-    attrsHam.push_back(0.0);
-    attrsSpam.push_back(0.0);
-  }
-
   ifstream infile;
   infile.open(paramsPath, ios::in);
-  if (!infile) {
+  if (!infile) { // initialization
     cout << "training" << endl;
     Train();
     cout << "storing" << endl;
@@ -40,7 +45,7 @@ SpamFilter::SpamFilter() :
     Test();
   }
   else
-    LoadParams();
+    LoadParams(); // load existing params
   
   infile.close();
 }
@@ -52,16 +57,15 @@ bool SpamFilter::Predict() {
   bool res = false;
   if (attrs * loglSpam + logpSpam > attrs * loglHam + logpHam) // posteriors
     res = true;
+
   return res;
 }
 
-bool SpamFilter::Predict(Mail mail) {
-  GetAttrs(mail);
-  return Predict();
-}
+bool SpamFilter::Predict(const Mail &mail) {
+  MailParser mp;
+  attrs = mp.Parse(mail);
 
-void SpamFilter::GetAttrs(Mail mail) {
-  
+  return Predict();
 }
 
 void SpamFilter::Train() {
@@ -75,7 +79,7 @@ void SpamFilter::Train() {
 
   uint numSpamTrain = 0, numHamTrain = 0;
 
-  vector<double> mailAttrs(numAttrs);
+  vector<double> mailAttrs(numAttrs), attrsHam(numAttrs), attrsSpam(numAttrs);
   while (!infile.eof()) {
     bool isSpam = false;
 
@@ -102,13 +106,22 @@ void SpamFilter::Train() {
       attrsHam = attrsHam + mailAttrs;
     }
   }
+  infile.close();
 
+  // calculate the priors
   logpSpam = log(double(numSpamTrain) / double(numHamTrain + numSpamTrain));
   logpHam = log(double(numHamTrain) / double(numHamTrain + numSpamTrain));
 
-  infile.close();
-
-  Likelihood(); // calculate likelihood
+  // calculate the likelihood
+  double sumAttrsHam = 0, sumAttrsSpam = 0;
+  for (auto i = 0; i < attrsHam.size(); ++i) {
+    sumAttrsHam += attrsHam[i];
+    sumAttrsSpam += attrsSpam[i];
+  }
+  for (auto i = 0; i < attrsHam.size(); ++i) {
+    loglHam.push_back(log(attrsHam[i] / sumAttrsHam));
+    loglSpam.push_back(log(attrsSpam[i] / sumAttrsSpam));
+  }
 }
 
 void SpamFilter::Test() {
@@ -140,6 +153,7 @@ void SpamFilter::Test() {
         attrs[i] += bias;
       }
     }
+    // evaluate
     if (Predict()) {
       if (isSpam)
         ++tp;
@@ -158,18 +172,6 @@ void SpamFilter::Test() {
 
   cout << "precision: " << double(tp) / double(tp + fp) << endl;
   cout << "recall: "  << double(tp) / double(tp + fn) << endl;
-}
-
-void SpamFilter::Likelihood() {
-  double sumAttrsHam = 0, sumAttrsSpam = 0;
-  for (auto i = 0; i < attrsHam.size(); ++i) {
-    sumAttrsHam += attrsHam[i];
-    sumAttrsSpam += attrsSpam[i];
-  }
-  for (auto i = 0; i < attrsHam.size(); ++i) {
-    loglHam.push_back(log(attrsHam[i] / sumAttrsHam));
-    loglSpam.push_back(log(attrsSpam[i] / sumAttrsSpam));
-  }
 }
 
 void SpamFilter::StoreParams() {

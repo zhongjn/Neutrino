@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Mail.h"
+#include "MailParser.h"
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -9,37 +10,29 @@
 
 using namespace std;
 
-const string trainPath = "spambase/train.data";
-const string testPath = "spambase/test.data";
-const string paramsPath = "spambase/params";
-const int numAttrs = 57; // number of attributes
-const double bias = 1.0 / 4000; // smoothing bias
-
 // Naive Bayes Classifier
 class SpamFilter {
 public:
   typedef unsigned int uint;
 
-  bool Predict(Mail mail);
+  bool Predict(const Mail &mail); // interface
   SpamFilter();
   ~SpamFilter();
 
 private:
   vector<double> attrs; // attributes
+
   double logpHam; // log priors
   double logpSpam;
 
-  vector<double> attrsHam; // attributes of training set
-  vector<double> attrsSpam;
-  vector<double> loglHam; // log likelihood of ham
-  vector<double> loglSpam; // log likelihood of spam
+  vector<double> loglHam; // log likelihood
+  vector<double> loglSpam;
+
   uint tp, fp, fn, tn; // evaluations
 
   void Train();
   void Test();
   bool Predict();
-  void GetAttrs(Mail mail);
   void StoreParams();
   void LoadParams();
-  void Likelihood(); // calculate the likelihood
 };
