@@ -15,9 +15,11 @@ int RunQt(int argc, char* argv[]) {
 int main(int argc, char *argv[])
 {
   
-
-    MailManager mgr;
     // test code
+    MailManager mgr;
+    ListCondition cond;
+    cond.match_full = "jn";
+    auto mails = mgr.ListMails(ListSource(), cond);
 
     return RunQt(argc, argv);
 

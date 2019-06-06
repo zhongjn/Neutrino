@@ -16,7 +16,7 @@ MailManager::MailManager() {
         "   content TEXT,"
         "   time INTEGER,"
         "   is_spam integer DEFAULT 0,"
-        "   folder_id INTEGER DEFAULT - 1,"
+        "   folder_id INTEGER DEFAULT -1,"
         "   read integer DEFAULT 0,"
         "   flag integer DEFAULT 0"
         ");";
@@ -34,10 +34,21 @@ MailManager::MailManager() {
 
 MailManager::~MailManager() { sqlite3_close(db); }
 
-template<typename T>
-string quote(const T& t) {
+static void replace_str(string& str, const string& from, const string& to) {
+    if (from.empty())
+        return;
+    size_t start_pos = 0;
+    while ((start_pos = str.find(from, start_pos)) != string::npos) {
+        str.replace(start_pos, from.length(), to);
+        start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+    }
+}
+
+static string quote(const string& t) {
     stringstream ss;
-    ss << "\"" << t << "\"";
+    string tt = t;
+    replace_str(tt, "\"", "\"\"");
+    ss << "\"" << tt << "\"";
     return ss.str();
 }
 
@@ -73,7 +84,7 @@ void MailManager::FetchMails() {
                 // TODO: 判断垃圾邮件
 
                 stringstream sqlInsert;
-                sqlInsert << "INSERT INTO mails (subject, content, time) VALUES (" << quote(msg.subject()) << "," << quote(msg.content()) << "," << quote(time) << ");";
+                sqlInsert << "INSERT INTO mails (subject, content, time) VALUES (" << quote(msg.subject()) << "," << quote(msg.content()) << "," << time << ");";
                 char* errmsg;
                 sqlite3_exec(db, sqlInsert.str().c_str(), nullptr, nullptr, &errmsg);
             }
@@ -88,13 +99,40 @@ void MailManager::FetchMails() {
 vector<Mail> MailManager::ListMails(const ListSource& source, const ListCondition& cond) const {
     // TODO: 收件人、发件人
     vector<Mail> lst;
-    string sql = "SELECT id, subject, content, time FROM mails ORDER BY time DESC;";
+    stringstream ss;
+    ss << "SELECT id, subject, content, time FROM mails";
+    switch (source.type)
+    {
+        case ListSource::Type::All:
+            ss << " WHERE is_spam=0";
+            break;
+        case ListSource::Type::Unread:
+            ss << " WHERE is_spam=0 AND read=0";
+            break;
+        case ListSource::Type::Flagged:
+            ss << " WHERE is_spam=0 AND flag=1";
+            break;
+        case ListSource::Type::Spam:
+            ss << " WHERE is_spam=1";
+            break;
+        case ListSource::Type::Folder:
+            ss << " WHERE is_spam=0 AND folder_id=" << source.folderId;
+            break;
+        default:
+            throw logic_error("Invalid ListSource type. This should not happen.");
+    }
+
+    if (cond.match_full) {
+        ss << " AND instr(ifnull(subject, '') || ifnull(content, ''), " << quote(cond.match_full.Value()) << ") > 0";
+    }
+    ss << " ORDER BY time DESC;";
+
     DB_CALLBACK(callback) {
         DB_CALLBACK_PARAM(vector<Mail>);
         param->push_back(Mail(atoi(values[0]), values[1], values[2], MailAddress("from@example.com"), MailAddress("to@example.com")));
         return 0;
     };
-    sqlite3_exec(db, sql.c_str(), callback, &lst, nullptr);
+    sqlite3_exec(db, ss.str().c_str(), callback, &lst, nullptr);
     return lst;
 }
 

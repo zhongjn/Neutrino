@@ -32,9 +32,10 @@ struct ListCondition {
         Field(bool strict, string match) : strict(strict), match(match) {};
     };
     // 如果为Null，则不启用该条件
-    Nullable<Field> subject;
-    Nullable<Field> content;
-    Nullable<Field> author;
+    //Nullable<Field> subject;
+    //Nullable<Field> content;
+    //Nullable<Field> author;
+    Nullable<string> match_full;
 };
 
 class MailManager {
