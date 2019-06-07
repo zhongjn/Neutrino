@@ -78,6 +78,7 @@ void inbox::OnTreeChosen()
 	int y0 = ui->scrollArea_2->geometry().y();
 	//int w = this->geometry().width();
 	//int h = this->geometry().height();
+	mgr.FetchMails();
 	auto mails = mgr.ListMails(source);
 	for (auto& mail : mails) {
 		//mail
@@ -105,6 +106,7 @@ void inbox::OnTreeChosen()
 		connect(mc, SIGNAL(clicked()), this, SLOT(OnReadClicked(mail, mc)));
 		connect(mb, SIGNAL(clicked()), this, SLOT(OnMailClicked(mail)));
 		
+		count++;
 	}
 	cout << count << std::endl;
 }
