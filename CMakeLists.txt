@@ -13,6 +13,7 @@ find_package(Qt5Core CONFIG REQUIRED)
 find_package(Qt5Gui CONFIG REQUIRED)
 
 set(UI 
+  UI/Common.cpp
   UI/inbox.cpp
   UI/inbox.ui
   UI/mainwindow.cpp

@@ -48,7 +48,7 @@ private:
 public:
     MailManager();
     MailManager(const MailManager&) = delete;
-    MailManager(MailManager&&) = delete;
+    MailManager(MailManager&&) = default;
     ~MailManager();
 
     // 拉取在线邮件，写到本地

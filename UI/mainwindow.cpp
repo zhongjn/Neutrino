@@ -37,7 +37,7 @@ void MainWindow::OnSigninClicked()
 	///mgr.FetchMails();
 
 	if (true) {
-		inbox w(mgr);
+		inbox w;
 		this->hide();
 		if (w.exec() == true) {
 			this->close();
