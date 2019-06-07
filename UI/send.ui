@@ -10,6 +10,12 @@
     <height>600</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>微软雅黑</family>
+    <pointsize>10</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -284,11 +290,11 @@
     <enum>Qt::Vertical</enum>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_6">
+  <widget class="QPushButton" name="pushButton_return">
    <property name="geometry">
     <rect>
-     <x>730</x>
-     <y>10</y>
+     <x>720</x>
+     <y>20</y>
      <width>56</width>
      <height>17</height>
     </rect>

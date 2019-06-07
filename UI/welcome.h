@@ -6,6 +6,10 @@
 
 #include "MailManager.h"
 
+/*
+	it's abandoned now
+*/
+
 namespace Ui {
 	class welcome;
 }

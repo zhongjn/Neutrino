@@ -19,8 +19,6 @@ set(UI
   UI/mainwindow.ui
   UI/send.cpp
   UI/send.ui
-  UI/welcome.cpp
-  UI/welcome.ui
 )
 
 # Add source to this project's executable.

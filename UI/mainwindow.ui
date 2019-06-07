@@ -10,6 +10,11 @@
     <height>600</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>微软雅黑</family>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -147,13 +152,13 @@
      <property name="geometry">
       <rect>
        <x>130</x>
-       <y>410</y>
+       <y>360</y>
        <width>56</width>
-       <height>17</height>
+       <height>21</height>
       </rect>
      </property>
      <property name="text">
-      <string>quit</string>
+      <string>close</string>
      </property>
     </widget>
    </widget>

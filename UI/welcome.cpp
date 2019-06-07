@@ -3,6 +3,10 @@
 #include "UI/inbox.h"
 #include "UI/send.h"
 
+/*
+	it's abandoned now
+*/
+
 welcome::welcome(MailManager mgr, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::welcome)
