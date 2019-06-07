@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QEventLoop>
-
+#include "Common.h"
 #include "MailManager.h"
 
 namespace Ui {
@@ -15,12 +15,11 @@ class send : public QWidget
     Q_OBJECT
 
 public:
-    explicit send(MailManager mgr, QWidget *parent = 0);
+    explicit send(QWidget *parent = 0);
     ~send();
 	void exec();
 private:
     Ui::send *ui;
-	MailManager m;
 	QEventLoop *ptLoop;
 private slots:
 	void OnSendClicked();
