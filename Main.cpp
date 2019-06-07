@@ -1,6 +1,5 @@
 #include "UI/mainwindow.h"
 #include "UI/send.h"
-#include "UI/welcome.h"
 #include "UI/inbox.h"
 #include <QApplication>
 

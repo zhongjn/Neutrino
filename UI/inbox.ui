@@ -195,60 +195,6 @@
       </widget>
      </widget>
     </widget>
-    <widget class="QScrollArea" name="scrollArea_4">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>30</y>
-       <width>631</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="widgetResizable">
-      <bool>true</bool>
-     </property>
-     <widget class="QWidget" name="scrollAreaWidgetContents_4">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>629</width>
-        <height>29</height>
-       </rect>
-      </property>
-      <widget class="QCheckBox" name="checkBox">
-       <property name="geometry">
-        <rect>
-         <x>5</x>
-         <y>3</y>
-         <width>71</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>unread</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushButton_10">
-       <property name="geometry">
-        <rect>
-         <x>90</x>
-         <y>3</y>
-         <width>531</width>
-         <height>24</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>overview of e-mail</string>
-       </property>
-      </widget>
-     </widget>
-    </widget>
     <widget class="QScrollArea" name="scrollArea_5">
      <property name="geometry">
       <rect>
@@ -1288,6 +1234,45 @@
      </item>
     </item>
    </item>
+  </widget>
+  <widget class="QPushButton" name="pushButton_quit">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>20</y>
+     <width>56</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>quit</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_logout">
+   <property name="geometry">
+    <rect>
+     <x>450</x>
+     <y>20</y>
+     <width>56</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>logout</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_write">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>20</y>
+     <width>56</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>write</string>
+   </property>
   </widget>
  </widget>
  <resources/>

@@ -1,7 +1,7 @@
 #include "UI/mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "UI/welcome.h"
+#include "UI/inbox.h"
 
 #include <QString>
 
@@ -30,12 +30,14 @@ void MainWindow::OnSigninClicked()
 	QString account = ui->lineEdit->text();
 	QString password = ui->lineEdit_2->text();
 
-	mgr.SetCredential(CredentialInfo(MailAddress(account.toStdString()), password.toStdString(),
+	mgr.SetCredential(CredentialInfo(MailAddress("610223674@qq.com"), "ycagpzuevtubbbee",
 		ServerEndPoint("smtp.qq.com", 465), ServerEndPoint("pop.qq.com", 995)));
-	mgr.FetchMails();
+	//mgr.SetCredential(CredentialInfo(MailAddress(account.toStdString()), password.toStdString(),
+	//	ServerEndPoint("smtp.qq.com", 465), ServerEndPoint("pop.qq.com", 995)));
+	///mgr.FetchMails();
 
 	if (true) {
-		welcome w(mgr);
+		inbox w(mgr);
 		this->hide();
 		if (w.exec() == true) {
 			this->close();

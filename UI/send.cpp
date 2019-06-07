@@ -13,7 +13,7 @@ send::send(MailManager mgr, QWidget *parent) :
 	m = mgr;
 	ptLoop = new QEventLoop(this);
 	connect(ui->pushButton_4, SIGNAL(clicked()), this, SLOT(OnSendClicked()));
-	connect(ui->pushButton_6, SIGNAL(clicked()), this, SLOT(OnReturnClicked()));
+	connect(ui->pushButton_return, SIGNAL(clicked()), this, SLOT(OnReturnClicked()));
 }
 
 send::~send()
