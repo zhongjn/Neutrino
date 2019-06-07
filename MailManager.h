@@ -5,7 +5,7 @@
 #include "Property.h"
 #include "Folder.h"
 #include "ThirdParty/sqlite3/sqlite3.h"
-#include <list>
+#include <vector>
 
 using namespace std;
 
@@ -13,8 +13,10 @@ using namespace std;
 struct ListSource {
     enum class Type {
         All,
-        Folder,
-        Spam
+        Unread,
+        Flagged,
+        Spam,
+        Folder
     } type = Type::All;
     // 如果type为Folder，那么folderId需要设置
     int folderId;
@@ -30,9 +32,10 @@ struct ListCondition {
         Field(bool strict, string match) : strict(strict), match(match) {};
     };
     // 如果为Null，则不启用该条件
-    Nullable<Field> subject;
-    Nullable<Field> content;
-    Nullable<Field> author;
+    //Nullable<Field> subject;
+    //Nullable<Field> content;
+    //Nullable<Field> author;
+    Nullable<string> match_full;
 };
 
 class MailManager {
@@ -50,7 +53,7 @@ public:
     void FetchMails();
 
     // 读取本地所有邮件，source指定读取源（全部、某个文件夹、垃圾箱），cond指定筛选条件
-    list<Mail> ListMails(const ListSource& source = ListSource(), const ListCondition& cond = ListCondition()) const; // 列出所有本地的邮件（给UI用) TODO: 筛选、检索
+    vector<Mail> ListMails(const ListSource& source = ListSource(), const ListCondition& cond = ListCondition()) const; // 列出所有本地的邮件（给UI用) TODO: 筛选、检索
     
     // 发送一封邮件
     void SendMail(const Mail& mail) const;
@@ -72,7 +75,7 @@ public:
     void DeleteFolder(int id);
 
     // 列出所有自定义文件夹
-    list<Folder> ListFolders();
+    vector<Folder> ListFolders();
 
     // 重命名一个自定义文件夹
     void RenameFolder(int id, string name);
