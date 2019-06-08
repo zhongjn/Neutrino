@@ -5,11 +5,12 @@
 #include "Mail.h"
 #include "MailManager.h"
 
-send::send(QWidget *parent) :
+send::send(MailManager mgr, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::send)
 {
     ui->setupUi(this);
+	m = mgr;
 	ptLoop = new QEventLoop(this);
 	connect(ui->pushButton_4, SIGNAL(clicked()), this, SLOT(OnSendClicked()));
 	connect(ui->pushButton_return, SIGNAL(clicked()), this, SLOT(OnReturnClicked()));
@@ -38,5 +39,5 @@ void send::OnSendClicked()
 	MailAddress sender(ui->lineEdit->text().toStdString());
 	MailAddress receiver(ui->lineEdit_2->text().toStdString());
 	Mail mail(id, std::move(subject), std::move(content), std::move(sender), std::move(receiver));
-	mgr.SendMail(mail);
+	m.SendMail(mail);
 }

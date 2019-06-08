@@ -3,12 +3,13 @@
 
 #include <iostream>
 
-inbox::inbox(QWidget *parent) :
+inbox::inbox(MailManager m, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::inbox)
 {
     ui->setupUi(this);
 	ptLoop = new QEventLoop(this);
+	mgr = m;
 	mgr.FetchMails();
 	connect(ui->pushButton_write, SIGNAL(clicked()), this, SLOT(OnWriteClicked()));
 	connect(ui->treeWidget, SIGNAL(itemSelectionChanged()), this, SLOT(OnTreeChosen()));
@@ -112,7 +113,7 @@ void inbox::OnTreeChosen()
 
 void inbox::OnWriteClicked()
 {
-	send w;
+	send w(mgr);
 	w.exec();
 }
 
