@@ -69,6 +69,11 @@ public:
     // 把一封邮件标为或不标为垃圾（移入或移除垃圾箱）
     void SetMailSpam(int mailId, bool spam);
 
+    // 把一封邮件标为或不为标星标
+    void SetMailFlag(int mailId, bool flag);
+
+    //  把一封邮件标为已读
+    void SetMailRead(int mailId);
 
     // 创建一个自定义文件夹
     void AddFolder(string name);

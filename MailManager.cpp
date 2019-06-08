@@ -100,7 +100,7 @@ vector<Mail> MailManager::ListMails(const ListSource& source, const ListConditio
     // TODO: 收件人、发件人
     vector<Mail> lst;
     stringstream ss;
-    ss << "SELECT id, subject, content, time FROM mails";
+    ss << "SELECT id, subject, content, time, read, flag, is_spam FROM mails";
     switch (source.type)
     {
         case ListSource::Type::All:
@@ -129,7 +129,12 @@ vector<Mail> MailManager::ListMails(const ListSource& source, const ListConditio
 
     DB_CALLBACK(callback) {
         DB_CALLBACK_PARAM(vector<Mail>);
-        param->push_back(Mail(atoi(values[0]), values[1], values[2], MailAddress("from@example.com"), MailAddress("to@example.com")));
+        Mail m(values[1], values[2], MailAddress("from@example.com"), MailAddress("to@example.com"));
+        m.SetId(atoi(values[0]));
+        m.SetRead(atoi(values[4]));
+        m.SetFlag(atoi(values[5]));
+        m.SetSpam(atoi(values[6]));
+        param->push_back(move(m));
         return 0;
     };
     sqlite3_exec(db, ss.str().c_str(), callback, &lst, nullptr);
@@ -171,6 +176,18 @@ void MailManager::SetMailFolder(int mailId, Nullable<int> folderId) {
 void MailManager::SetMailSpam(int mailId, bool spam) {
     stringstream ss;
     ss << "UPDATE mails SET is_spam=" << spam << " WHERE id=" << mailId;
+    sqlite3_exec(db, ss.str().c_str(), nullptr, nullptr, nullptr);
+}
+
+void MailManager::SetMailFlag(int mailId, bool flag) {
+    stringstream ss;
+    ss << "UPDATE mails SET flag=" << flag << " WHERE id=" << mailId;
+    sqlite3_exec(db, ss.str().c_str(), nullptr, nullptr, nullptr);
+}
+
+void MailManager::SetMailRead(int mailId) {
+    stringstream ss;
+    ss << "UPDATE mails SET read=1 WHERE id=" << mailId;
     sqlite3_exec(db, ss.str().c_str(), nullptr, nullptr, nullptr);
 }
 

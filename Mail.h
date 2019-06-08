@@ -7,7 +7,10 @@ using namespace std;
 
 // 表示一个邮件
 class Mail {
-    PROPERTY_READ(int, Id)
+    PROPERTY(int, Id)
+    PROPERTY(bool, Flag)
+    PROPERTY(bool, Spam)
+    PROPERTY(bool, Read)
     PROPERTY_READ(string, Subject)
     PROPERTY_READ(string, Content)
     PROPERTY_READ(MailAddress, Sender)
@@ -16,6 +19,6 @@ class Mail {
 
 public:
     Mail() = default;
-    Mail(int id, string subject, string content, MailAddress sender,
+    Mail(string subject, string content, MailAddress sender,
         MailAddress receiver);
 };
