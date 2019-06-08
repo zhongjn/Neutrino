@@ -83,7 +83,13 @@ void inbox::MailSearch(bool flag)
 	int x0 = ui->scrollArea_2->geometry().x();
 	int y0 = ui->scrollArea_2->geometry().y();//TODO: zoom
 	//mgr.FetchMails();
-	auto mails = mgr.ListMails(sour, con);
+	vector<Mail> mails;
+	if (flag == false) {
+		mails = mgr.ListMails(sour);
+	}
+	else {
+		mails = mgr.ListMails(sour, con);
+	}
 	for (auto& mail : mails) {
 		//mail
 		count++;
