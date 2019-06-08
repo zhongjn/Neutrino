@@ -77,19 +77,19 @@ void inbox::MailSearch(bool flag)
 
 	ListSource sour = GetTreeItem();
 	ListCondition con = ListCondition();
-	con.match_full = ui->lineEdit->text();
+	con.match_full = ui->lineEdit->text().toStdString();
+	vector<Mail> mails;
 	if (flag == true) {
-		auto mails = mgr.ListMails(sour, con);
+		mails = mgr.ListMails(sour, con);
 	}
 	else {
-		auto mails = mgr.ListMails(sour);
+		mails = mgr.ListMails(sour);
 	}
 
 	int count = 0;
 	int x0 = ui->scrollArea_2->geometry().x();
 	int y0 = ui->scrollArea_2->geometry().y();//TODO: zoom
 	//mgr.FetchMails();
-	auto mails = mgr.ListMails(sour);
 	for (auto& mail : mails) {
 		//mail
 		count++;
