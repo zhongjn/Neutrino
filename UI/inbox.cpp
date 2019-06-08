@@ -3,14 +3,14 @@
 
 #include <iostream>
 
-inbox::inbox(MailManager m, QWidget *parent) :
+inbox::inbox(MailManager* m, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::inbox)
 {
     ui->setupUi(this);
 	ptLoop = new QEventLoop(this);
 	mgr = m;
-	mgr.FetchMails();
+	//mgr->FetchMails();
 	connect(ui->pushButton_write, SIGNAL(clicked()), this, SLOT(OnWriteClicked()));
 	connect(ui->treeWidget, SIGNAL(itemSelectionChanged()), this, SLOT(OnTreeChosen()));
 	connect(ui->pushButton_quit, SIGNAL(clicked()), this, SLOT(OnReturnClicked()));
@@ -78,7 +78,7 @@ void inbox::OnTreeChosen()
 	int y0 = ui->scrollArea_2->geometry().y();
 	//int w = this->geometry().width();
 	//int h = this->geometry().height();
-	mgr.FetchMails();
+	mgr->FetchMails();
 	auto mails = mgr.ListMails(source);
 	for (auto& mail : mails) {
 		//mail

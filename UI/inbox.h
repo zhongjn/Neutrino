@@ -32,7 +32,7 @@ public:
 private:
     Ui::inbox* ui;
 	QEventLoop* ptLoop;
-	MailManager mgr;
+	MailManager *mgr;
 	vector<QCheckBox*> vc;
 	vector<QPushButton*> vb;
 	bool closeResult;
