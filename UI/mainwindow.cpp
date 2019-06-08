@@ -22,12 +22,12 @@ void MainWindow::OnSigninClicked()
 {
 	QString account = ui->lineEdit->text();
 	QString password = ui->lineEdit_2->text();
-
-	mgr.SetCredential(CredentialInfo(MailAddress("610223674@qq.com"), "ycagpzuevtubbbee",
+	//madr = MailAddress(account.toStdString());
+	madr = MailAddress("610223674@qq.com");
+	mgr.SetCredential(CredentialInfo(madr, "ycagpzuevtubbbee",
 		ServerEndPoint("smtp.qq.com", 465), ServerEndPoint("pop.qq.com", 995)));
-	//mgr.SetCredential(CredentialInfo(MailAddress(account.toStdString()), password.toStdString(),
+	//mgr.SetCredential(CredentialInfo(madr, password.toStdString(),
 	//	ServerEndPoint("smtp.qq.com", 465), ServerEndPoint("pop.qq.com", 995)));
-	///mgr.FetchMails();
 
 	if (true) {
 		inbox w;

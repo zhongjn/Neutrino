@@ -38,3 +38,22 @@ void MailRead::OnReadClicked()
 		//mail
 	}
 }
+
+MailFlag::MailFlag(Mail mail, QWidget *parent) : QCheckBox(parent)
+{
+	m = mail;
+	this->setText("flag");
+	connect(this, SIGNAL(clicked()), this, SLOT(OnReadClicked()));
+}
+
+void MailFlag::OnFlagClicked()
+{
+	if (this->isChecked() == true) {
+		this->setChecked(false);
+		//mail
+	}
+	else {
+		this->setChecked(true);
+		//mail
+	}
+}

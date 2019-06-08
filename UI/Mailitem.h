@@ -32,3 +32,15 @@ public:
 public slots:
 	void OnReadClicked();
 };
+
+class MailFlag : public QCheckBox
+{
+	Q_OBJECT
+
+public:
+	Mail m;
+	explicit MailFlag(Mail mail, QWidget *parent = 0);
+	//~MailFlag();
+public slots:
+	void OnFlagClicked();
+};

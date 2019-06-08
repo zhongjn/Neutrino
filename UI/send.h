@@ -3,7 +3,9 @@
 
 #include <QWidget>
 #include <QEventLoop>
-#include "Common.h"
+#include <QString>
+#include "UI/Common.h"
+#include "Mail.h"
 #include "MailManager.h"
 
 namespace Ui {

@@ -35,10 +35,14 @@ private:
 	vector<MailRead*> vr;
 	vector<MailMore*> vm;
 	bool closeResult;
+
+	ListSource GetTreeItem();
+	void MailSearch(bool);
 private slots:
-	void OnTreeChosen();
 	void OnWriteClicked();
 	void OnReturnClicked();
+	void OnTreeChosen();
+	void OnSearchEnter();
 };
 
 #endif // INBOX_H
