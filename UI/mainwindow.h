@@ -1,8 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "Common.h"
 #include <QMainWindow>
+#include <QString>
+
+#include "UI/Common.h"
+#include "MailManager.h"
 
 namespace Ui {
 	class MainWindow;

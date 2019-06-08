@@ -1,7 +1,7 @@
 #include "UI/inbox.h"
 #include "ui_inbox.h"
 
-#include <iostream>
+#include <iostream>///
 
 inbox::inbox(QWidget *parent) :
     QWidget(parent),
@@ -20,7 +20,7 @@ inbox::~inbox()
 {
     delete ui;
 	delete ptLoop;
-	for (auto &v : vc) {
+	for (auto &v : vr) {
 		delete v;
 	}
 	for (auto &v : vb) {
@@ -32,15 +32,14 @@ bool inbox::exec()
 {
 	setWindowModality(Qt::ApplicationModal);
 	show();
-	//OnTreeChosen();
 	ptLoop->exec();
 	return closeResult;
 }
 
 void inbox::OnTreeChosen()
 {
-	cout << "treechosen" <<std::endl;
-	for (auto &v : vc) {
+	cout << "treechosen" <<std::endl;///
+	for (auto &v : vr) {
 		delete v;
 	}
 	for (auto &v : vb) {
@@ -70,44 +69,44 @@ void inbox::OnTreeChosen()
 	//	//	source.folderId = 0;
 	//}
 
-	cout << item->text(0).toStdString() << std::endl;
+	cout << item->text(0).toStdString() << std::endl;///
 
 	int count = 0;
 	int x0 = ui->scrollArea_2->geometry().x();
 	int y0 = ui->scrollArea_2->geometry().y();
+	//int x0 = 0;
+	//int y0 = 0;
 	//int w = this->geometry().width();
 	//int h = this->geometry().height();
 	mgr.FetchMails();
 	auto mails = mgr.ListMails(source);
 	for (auto& mail : mails) {
 		//mail
-		QCheckBox* mc = new QCheckBox(this);
+		count++;
+
+		QCheckBox* mr = new QCheckBox(this);
 		QPushButton* mb = new QPushButton(this);
-		vc.push_back(mc);
+		vr.push_back(mr);
 		vb.push_back(mb);
-		mc->setVisible(true);
-		mb->setVisible(true);
-		//set mc size
-		mc->resize(CHECKBOXWIDTH, MAILHEIGHT);
-		//place mc
-		mc->move(x0, y0 + count * ROWSPACE);
-		//set mb size
+		mr->show();
+		mb->show();
+		mr->resize(CHECKBOXWIDTH, MAILHEIGHT);
+		mr->move(x0, y0 + count * (MAILHEIGHT + ROWSPACE));
 		mb->resize(BUTTONWIDTH, MAILHEIGHT);
-		//place mb
-		mc->move(x0 + COLUNMSPACE, y0 + count * ROWSPACE);
+		mb->move(x0 + CHECKBOXWIDTH + COLUNMSPACE, y0 + count * (MAILHEIGHT + ROWSPACE));
 		if (1) {
-			mc->setChecked(true);
+			mr->setChecked(true);
 		}
 		else {
-			mc->setChecked(false);
+			mr->setChecked(false);
 		}
+		mr->setText("unread");
 		mb->setText(QString::fromStdString(mail.GetSubject()));
-		connect(mc, SIGNAL(clicked()), this, SLOT(OnReadClicked(mail, mc)));
+		connect(mr, SIGNAL(clicked()), this, SLOT(OnReadClicked(mail, mr)));
 		connect(mb, SIGNAL(clicked()), this, SLOT(OnMailClicked(mail)));
 		
-		count++;
 	}
-	cout << count << std::endl;
+	cout << count << std::endl;///
 }
 
 void inbox::OnWriteClicked()
@@ -130,11 +129,14 @@ void inbox::OnReadClicked(Mail mail, QCheckBox* c)
 
 void inbox::OnMailClicked(Mail mail)
 {
-	QPlainTextEdit* m = new QPlainTextEdit();
+	QDialog* w = new QDialog();
+	cout << "OMC" << std::endl;
+	QPlainTextEdit* m = new QPlainTextEdit(w);
 	m->appendPlainText(QString::fromStdString(mail.GetContent()));
-	m->setFocusPolicy(Qt::NoFocus);
+	//m->setFocusPolicy(Qt::NoFocus);
 	//m->setEnabled(false);
 	m->show();
+	w->exec();
 }
 
 void inbox::OnReturnClicked()

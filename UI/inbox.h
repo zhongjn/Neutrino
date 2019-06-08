@@ -6,16 +6,17 @@
 #include <QEventLoop>
 #include <QPushButton>
 #include <QCheckBox>
-#include <QPlainTextEdit>
+#include <QDialog>
+#include <QPlainTextEdit>//
 #include <vector>
 #include "UI/send.h"
 #include "MailManager.h"
-#include "Common.h"
+#include "UI/Common.h"
 
 #define MAILHEIGHT 25
 #define CHECKBOXWIDTH 60
 #define BUTTONWIDTH 540
-#define ROWSPACE 35
+#define ROWSPACE 5
 #define COLUNMSPACE 5
 
 namespace Ui {
@@ -33,7 +34,7 @@ public:
 private:
     Ui::inbox* ui;
 	QEventLoop* ptLoop;
-	vector<QCheckBox*> vc;
+	vector<QCheckBox*> vr;
 	vector<QPushButton*> vb;
 	bool closeResult;
 private slots:

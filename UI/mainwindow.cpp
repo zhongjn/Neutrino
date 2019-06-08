@@ -1,11 +1,6 @@
 #include "UI/mainwindow.h"
 #include "ui_mainwindow.h"
-
 #include "UI/inbox.h"
-
-#include <QString>
-
-#include "MailManager.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -25,8 +20,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::OnSigninClicked()
 {
-	MailManager mgr;
-
 	QString account = ui->lineEdit->text();
 	QString password = ui->lineEdit_2->text();
 
