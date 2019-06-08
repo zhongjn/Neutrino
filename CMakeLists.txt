@@ -26,15 +26,28 @@ set(UI
 # Add source to this project's executable.
 add_executable(
   Neutrino 
+  "CredentialInfo.cpp"
+  "CredentialInfo.h"
+  "DB.h"
+  "Folder.cpp"
+  "Folder.h"
+  "IPEndPoint.cpp"
+  "IPEndPoint.h"
+  "Mail.cpp"
+  "Mail.h"
+  "MailAddress.cpp"
+  "MailAddress.h"
+  "MailManager.cpp"
+  "MailManager.h"
+  "MailParser.cpp"
+  "MailParser.h"
+  "Main.cpp"
   "Nullable.h"
   "Property.h"
-  "CredentialInfo.cpp"
-  "Folder.cpp"
-  "IPEndPoint.cpp"
-  "Mail.cpp" 
-  "MailAddress.cpp"
-  "MailManager.cpp"
-  "Main.cpp"
+  "SpamFilter.cpp"
+  "SpamFilter.h"
+  "Utility.cpp"
+  "Utility.h"
   ${UI}
 )
 

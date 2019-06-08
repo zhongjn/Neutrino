@@ -32,11 +32,10 @@ void send::OnReturnClicked()
 }
 void send::OnSendClicked()
 {
-	int id;
 	string subject = ui->lineEdit_3->text().toStdString();
 	string content = ui->textEdit->toPlainText().toStdString();
 	MailAddress sender(ui->lineEdit->text().toStdString());
 	MailAddress receiver(ui->lineEdit_2->text().toStdString());
-	Mail mail(id, std::move(subject), std::move(content), std::move(sender), std::move(receiver));
+	Mail mail(std::move(subject), std::move(content), std::move(sender), std::move(receiver));
 	mgr.SendMail(mail);
 }
