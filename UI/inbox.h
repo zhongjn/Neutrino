@@ -10,6 +10,7 @@
 #include <vector>
 #include "UI/send.h"
 #include "MailManager.h"
+#include "Common.h"
 
 #define MAILHEIGHT 25
 #define CHECKBOXWIDTH 60
@@ -26,13 +27,12 @@ class inbox : public QWidget
     Q_OBJECT
 
 public:
-    explicit inbox(MailManager m, QWidget *parent = 0);
+    explicit inbox(QWidget *parent = 0);
     ~inbox();
 	bool exec();
 private:
     Ui::inbox* ui;
 	QEventLoop* ptLoop;
-	MailManager *mgr;
 	vector<QCheckBox*> vc;
 	vector<QPushButton*> vb;
 	bool closeResult;

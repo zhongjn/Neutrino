@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QEventLoop>
-
+#include "Common.h"
 #include "MailManager.h"
 
 /*
@@ -25,7 +25,6 @@ public:
 
 private:
     Ui::welcome *ui;
-	MailManager m;
 	QEventLoop *ptLoop;
 	bool closeResult;
 private slots:
