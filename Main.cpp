@@ -16,8 +16,10 @@ int main(int argc, char *argv[])
   
     // test code
     MailManager mgr;
+
     ListCondition cond;
-    cond.match_full = "jn";
+    cond.match_full = "123";
+
     auto mails = mgr.ListMails(ListSource(), cond);
 
     return RunQt(argc, argv);
