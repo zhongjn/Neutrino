@@ -1,16 +1,34 @@
 #pragma once
 
+#include <QWidget>
 #include <QPushButton>
+#include <QCheckBox>
+#include <QDialog>
+#include <QPlainTextEdit>
+#include "MailManager.h"
 
-class MailButton : public QPushButton
+#include <iostream>
+
+class MailMore : public QPushButton
 {
+	Q_OBJECT
+
 public:
-	MailButton(QString filename);
-	~MailButton();
+	Mail m;
+	explicit MailMore(Mail mail, QWidget *parent = 0);
+	//~MailMore();
+public slots:
+	void OnMoreClicked();
 };
-MailButton::MailButton(QString filename)
+
+class MailRead : public QCheckBox
 {
-	this->filename = filename;
-	this->setText(this->filename);
-	connect(this, SIGNAL(clicked(bool)), this, SLOT(displaySlot()));
-}
+	Q_OBJECT
+
+public:
+	Mail m;
+	explicit MailRead(Mail mail, QWidget *parent = 0);
+	//~MailRead();
+public slots:
+	void OnReadClicked();
+};

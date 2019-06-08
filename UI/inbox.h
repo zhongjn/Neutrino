@@ -4,14 +4,12 @@
 #include <QWidget>
 #include <QTreeWidget>
 #include <QEventLoop>
-#include <QPushButton>
-#include <QCheckBox>
-#include <QDialog>
-#include <QPlainTextEdit>//
 #include <vector>
 #include "UI/send.h"
 #include "MailManager.h"
 #include "UI/Common.h"
+
+#include "UI/Mailitem.h"
 
 #define MAILHEIGHT 25
 #define CHECKBOXWIDTH 60
@@ -34,14 +32,12 @@ public:
 private:
     Ui::inbox* ui;
 	QEventLoop* ptLoop;
-	vector<QCheckBox*> vr;
-	vector<QPushButton*> vb;
+	vector<MailRead*> vr;
+	vector<MailMore*> vm;
 	bool closeResult;
 private slots:
 	void OnTreeChosen();
 	void OnWriteClicked();
-	void OnReadClicked(Mail mail, QCheckBox* c);
-	void OnMailClicked(Mail mail);
 	void OnReturnClicked();
 };
 
