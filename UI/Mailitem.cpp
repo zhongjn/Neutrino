@@ -30,11 +30,9 @@ MailRead::MailRead(Mail mail, QWidget *parent) : QCheckBox(parent)
 void MailRead::OnReadClicked()
 {
 	if (this->isChecked() == true) {
-        this->setChecked(false);
 		//mail
 	}
 	else {
-        this->setChecked(true);
 		//mail
 	}
 }
