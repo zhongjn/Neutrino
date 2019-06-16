@@ -11,11 +11,10 @@
 using namespace std;
 
 // analyze the attributes of email
+// static method used to parse mails
 class MailParser {
 public:
   typedef unsigned int uint;
 
-  vector<double> Parse(const Mail &mail);
-  MailParser();
-  ~MailParser();
+  static vector<double> Parse(const Mail &mail);
 };
