@@ -135,6 +135,7 @@
      </property>
      <property name="font">
       <font>
+       <family>Segoe UI</family>
        <pointsize>9</pointsize>
        <weight>50</weight>
        <bold>false</bold>
@@ -153,9 +154,9 @@
     <widget class="QPushButton" name="pushButton_2">
      <property name="geometry">
       <rect>
-       <x>130</x>
+       <x>190</x>
        <y>370</y>
-       <width>61</width>
+       <width>81</width>
        <height>31</height>
       </rect>
      </property>

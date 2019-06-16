@@ -8,6 +8,7 @@
 #include <vector>
 #include "MailManager.h"
 #include "Common.h"
+#include "inbox_detail.h"
 #include <iostream>
 
 class MailMore : public QPushButton

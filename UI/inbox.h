@@ -53,6 +53,9 @@ private slots:
 	void OnDeleteClicked();
 	void OnMark();
 	void OnMove();
+	void FolderNew();
+	void FolderRename();
+	void FolderRemove();
 };
 
 #endif // INBOX_H

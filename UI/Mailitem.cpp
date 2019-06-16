@@ -10,14 +10,8 @@ MailMore::MailMore(Mail *mail, QWidget *parent) : QPushButton(parent)
 void MailMore::OnMoreClicked()
 {
 	mgr.SetMailRead(m->GetId(), true);
-	QDialog *w = new QDialog();
-	//TO DO: UI
-	QPlainTextEdit *t = new QPlainTextEdit(w);
-	t->appendPlainText(QString::fromStdString(m->GetSubject()));
-	t->setFocusPolicy(Qt::NoFocus);
-	//TO DO: read
-	t->show();
-	w->exec();
+	inbox_detail *w = new inbox_detail(m, parentWidget());
+	w->show();
 }
 
 MailChoose::MailChoose(Mail *mail, vector<int> *cid, QWidget *parent) : QCheckBox(parent)
@@ -61,7 +55,6 @@ MailRead::MailRead(Mail *mail, QWidget *parent) : QCheckBox(parent)
 void MailRead::OnReadClicked()
 {
 	mgr.SetMailRead(m->GetId(), this->isChecked());
-	//m->SetRead(this->isChecked());
 }
 
 MailFlag::MailFlag(Mail *mail, QWidget *parent) : QCheckBox(parent)
@@ -75,5 +68,4 @@ MailFlag::MailFlag(Mail *mail, QWidget *parent) : QCheckBox(parent)
 void MailFlag::OnFlagClicked()
 {
 	mgr.SetMailFlag(m->GetId(), this->isChecked());
-	//m->SetFlag(this->isChecked());
 }

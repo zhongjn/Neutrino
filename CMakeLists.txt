@@ -16,6 +16,8 @@ set(UI
   UI/Common.cpp
   UI/inbox.cpp
   UI/inbox.ui
+  UI/inbox_detail.cpp
+  UI/inbox_detail.ui
   UI/Mailitem.cpp
   UI/mainwindow.cpp
   UI/mainwindow.ui

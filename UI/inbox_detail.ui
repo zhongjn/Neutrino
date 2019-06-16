@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>808</width>
     <height>600</height>
    </rect>
   </property>
@@ -41,166 +41,12 @@
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QTreeWidget" name="treeWidget">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>50</y>
-     <width>151</width>
-     <height>551</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>微软雅黑</family>
-    </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-image: url(:/image/image/background3.jpg);</string>
-   </property>
-   <column>
-    <property name="text">
-     <string>Func</string>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-   </column>
-   <item>
-    <property name="text">
-     <string>New</string>
-    </property>
-    <property name="font">
-     <font>
-      <family>微软雅黑</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>All</string>
-    </property>
-    <property name="font">
-     <font>
-      <family>微软雅黑</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Read</string>
-    </property>
-    <property name="font">
-     <font>
-      <family>微软雅黑</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Unread</string>
-    </property>
-    <property name="font">
-     <font>
-      <family>微软雅黑</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Flagged</string>
-    </property>
-    <property name="font">
-     <font>
-      <family>微软雅黑</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Deleted</string>
-    </property>
-    <property name="font">
-     <font>
-      <family>微软雅黑</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Inbox Floder</string>
-    </property>
-    <property name="font">
-     <font>
-      <family>微软雅黑</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <item>
-     <property name="text">
-      <string>新建项目</string>
-     </property>
-     <item>
-      <property name="text">
-       <string>新建子项目</string>
-      </property>
-     </item>
-    </item>
-    <item>
-     <property name="text">
-      <string>新建项目</string>
-     </property>
-     <item>
-      <property name="text">
-       <string>新建子项目</string>
-      </property>
-     </item>
-    </item>
-   </item>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit_2">
-   <property name="geometry">
-    <rect>
-     <x>612</x>
-     <y>20</y>
-     <width>181</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Search Messages</string>
-   </property>
-  </widget>
   <widget class="QScrollArea" name="scrollArea_2">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>5</x>
      <y>50</y>
-     <width>651</width>
+     <width>790</width>
      <height>551</height>
     </rect>
    </property>
@@ -218,29 +64,16 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>649</width>
+      <width>788</width>
       <height>549</height>
      </rect>
     </property>
-    <widget class="QScrollBar" name="verticalScrollBar">
-     <property name="geometry">
-      <rect>
-       <x>630</x>
-       <y>0</y>
-       <width>20</width>
-       <height>541</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-    </widget>
     <widget class="QScrollArea" name="scrollArea_3">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>631</width>
+       <width>791</width>
        <height>24</height>
       </rect>
      </property>
@@ -252,49 +85,11 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>629</width>
+        <width>789</width>
         <height>22</height>
        </rect>
       </property>
-      <widget class="QComboBox" name="comboBox">
-       <property name="geometry">
-        <rect>
-         <x>383</x>
-         <y>0</y>
-         <width>81</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>微软雅黑</family>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">border-image: url(:/image/image/background4.jpg);</string>
-       </property>
-       <item>
-        <property name="text">
-         <string>Move to</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>inbox</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>send</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>new folder</string>
-        </property>
-       </item>
-      </widget>
-      <widget class="QPushButton" name="pushButton_7">
+      <widget class="QPushButton" name="pushButton_back">
        <property name="geometry">
         <rect>
          <x>0</x>
@@ -316,7 +111,7 @@
         <string>Back</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_8">
+      <widget class="QPushButton" name="pushButton_reply">
        <property name="geometry">
         <rect>
          <x>70</x>
@@ -344,35 +139,13 @@
         <string>Reply</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushButton_9">
+      <widget class="QComboBox" name="comboBox_mark">
        <property name="geometry">
         <rect>
-         <x>140</x>
+         <x>210</x>
          <y>-1</y>
-         <width>91</width>
-         <height>24</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>微软雅黑</family>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-image: url(:/image/image/background3.jpg);</string>
-       </property>
-       <property name="text">
-        <string>Forward</string>
-       </property>
-      </widget>
-      <widget class="QComboBox" name="comboBox_2">
-       <property name="geometry">
-        <rect>
-         <x>302</x>
-         <y>0</y>
          <width>81</width>
-         <height>22</height>
+         <height>24</height>
         </rect>
        </property>
        <property name="font">
@@ -385,7 +158,7 @@
        </property>
        <item>
         <property name="text">
-         <string>Mard as</string>
+         <string>Mark as</string>
         </property>
        </item>
        <item>
@@ -400,14 +173,19 @@
        </item>
        <item>
         <property name="text">
-         <string>star</string>
+         <string>flagged</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>unflagged</string>
         </property>
        </item>
       </widget>
-      <widget class="QPushButton" name="pushButton_10">
+      <widget class="QPushButton" name="pushButton_delete">
        <property name="geometry">
         <rect>
-         <x>230</x>
+         <x>140</x>
          <y>-1</y>
          <width>71</width>
          <height>24</height>
@@ -433,7 +211,7 @@
       <rect>
        <x>0</x>
        <y>25</y>
-       <width>631</width>
+       <width>791</width>
        <height>91</height>
       </rect>
      </property>
@@ -445,11 +223,11 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>629</width>
+        <width>789</width>
         <height>89</height>
        </rect>
       </property>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="label_title">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -469,7 +247,7 @@
         <string> Title of the email</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="label_From">
        <property name="geometry">
         <rect>
          <x>30</x>
@@ -482,7 +260,7 @@
         <string>From:</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="label_Date">
        <property name="geometry">
         <rect>
          <x>30</x>
@@ -495,7 +273,7 @@
         <string>Date:</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="label_sender">
        <property name="geometry">
         <rect>
          <x>90</x>
@@ -513,7 +291,7 @@
         <string>the address of sender</string>
        </property>
       </widget>
-      <widget class="QLabel" name="label_6">
+      <widget class="QLabel" name="label_time">
        <property name="geometry">
         <rect>
          <x>90</x>
@@ -533,7 +311,7 @@
       <rect>
        <x>0</x>
        <y>116</y>
-       <width>631</width>
+       <width>791</width>
        <height>435</height>
       </rect>
      </property>

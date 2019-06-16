@@ -20,6 +20,9 @@ inbox::inbox(QWidget *parent) :
 	connect(ui->pushButton_7, SIGNAL(clicked()), this, SLOT(OnDeleteClicked()));
 	connect(ui->comboBox_2, SIGNAL(currentIndexChanged(QString)), this, SLOT(OnMark()));
 	connect(ui->comboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(OnMove()));
+	connect(ui->pushButton_new, SIGNAL(clicked()), this, SLOT(FolderNew()));
+	connect(ui->pushButton_rename, SIGNAL(clicked()), this, SLOT(FolderRename()));
+	connect(ui->pushButton_remove, SIGNAL(clicked()), this, SLOT(FolderRemove()));
 }
 
 inbox::~inbox()
@@ -160,9 +163,12 @@ ListSource inbox::GetTreeItem()
 	else if (item->text(0).toStdString() == "Deleted") {
 		source.type = ListSource::Type::Spam;
 	}
+	else if (item->text(0).toStdString() == "Spam") {
+		source.type = ListSource::Type::Spam;
+	}
 	else if (item->text(0).toStdString() == "Folder") {
 		source.type = ListSource::Type::Folder;
-		//	source.folderId = 0;
+		source.folderId = -1;
 	}
 	else {
 		source.type = ListSource::Type::All;
@@ -203,8 +209,20 @@ void inbox::OnReadAll()
 
 void inbox::OnDeleteClicked()
 {
-	for (vector<int>::iterator iter = cid.begin(); iter != cid.end(); iter++) {
-		;
+	for (vector<int>::iterator i = cid.begin(); i != cid.end(); i++) {
+		bool spam = false;
+		for (vector<Mail>::iterator iter = mails.begin(); iter != mails.end(); iter++) {
+			if (iter->GetId() == *i) {
+				spam = iter->GetSpam();
+				break;
+			}
+		}
+		if (spam == false) {
+			mgr.SetMailSpam(*i, true);
+		}
+		else {
+			mgr.DeleteMail(*i);
+		}
 	}
 	MailSearch(false);
 }
@@ -223,17 +241,34 @@ void inbox::OnMark()
 	}
 	else if (ui->comboBox_2->currentIndex() == 3) {
 		for (vector<int>::iterator iter = cid.begin(); iter != cid.end(); iter++) {
-			mgr.SetMailFlag(*iter, false);
+			mgr.SetMailFlag(*iter, true);
 		}
 	}
-	else if (0) {
-		;
+	else if (ui->comboBox_2->currentIndex() == 4) {
+		for (vector<int>::iterator iter = cid.begin(); iter != cid.end(); iter++) {
+			mgr.SetMailFlag(*iter, false);
+		}
 	}
 	ui->comboBox_2->setCurrentIndex(0);
 	MailSearch(false);
 }
 
 void inbox::OnMove()
+{
+	;
+}
+
+void inbox::FolderNew()
+{	
+	;
+}
+
+void inbox::FolderRename()
+{
+	;
+}
+
+void inbox::FolderRemove()
 {
 
 }
