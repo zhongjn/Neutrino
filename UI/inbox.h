@@ -48,7 +48,8 @@ private slots:
 	void OnReturnClicked();
 	void OnTreeChosen();
 	void OnSearchEnter();
-
+	void OnChooseAll();
+	void OnReadAll();
 };
 
 #endif // INBOX_H

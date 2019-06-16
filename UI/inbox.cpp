@@ -15,6 +15,8 @@ inbox::inbox(QWidget *parent) :
 	connect(ui->pushButton_logout, SIGNAL(clicked()), this, SLOT(OnReturnClicked()));
 	connect(ui->treeWidget, SIGNAL(itemSelectionChanged()), this, SLOT(OnTreeChosen()));
 	connect(ui->lineEdit, SIGNAL(returnPressed()), this, SLOT(OnSearchEnter()));
+	connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(OnChooseAll()));
+	connect(ui->pushButton_9, SIGNAL(clicked()), this, SLOT(OnReadAll()));
 }
 
 inbox::~inbox()
@@ -144,6 +146,10 @@ ListSource inbox::GetTreeItem()
 		source.type = ListSource::Type::All;
 		source.folderId = -1;
 	}
+	else if (item->text(0).toStdString() == "Read") {
+		source.type = ListSource::Type::Read;
+		source.folderId = -1;
+	}
 	else if (item->text(0).toStdString() == "Unread") {
 		source.type = ListSource::Type::Unread;
 		source.folderId = -1;
@@ -167,3 +173,32 @@ ListSource inbox::GetTreeItem()
 	return source;
 }
 
+void inbox::OnChooseAll()
+{
+	if (cid.size() < mails.size()) {
+		for (vector<Mail>::iterator iter = mails.begin(); iter != mails.end(); iter++) {
+			bool find = false;
+			for (vector<int>::iterator i = cid.begin(); i != cid.end(); i++) {
+				if (*i == iter->GetId()) {
+					find = true;
+					break;
+				}
+			}
+			if (find == false) {
+				cid.push_back(iter->GetId());
+			}
+		}
+	}
+	else {
+		cid.clear();
+	}
+	MailSearch(false);
+}
+
+void inbox::OnReadAll()
+{
+	for (vector<Mail>::iterator iter = mails.begin(); iter != mails.end(); iter++) {
+		mgr.SetMailRead(iter->GetId(), true);
+	}
+	MailSearch(false);
+}

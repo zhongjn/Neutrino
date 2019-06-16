@@ -9,7 +9,7 @@ MailMore::MailMore(Mail *mail, QWidget *parent) : QPushButton(parent)
 
 void MailMore::OnMoreClicked()
 {
-	mgr.SetMailRead(m->GetId());
+	mgr.SetMailRead(m->GetId(), true);
 	QDialog *w = new QDialog();
 	//TO DO: UI
 	QPlainTextEdit *t = new QPlainTextEdit(w);
@@ -60,7 +60,7 @@ MailRead::MailRead(Mail *mail, QWidget *parent) : QCheckBox(parent)
 
 void MailRead::OnReadClicked()
 {
-	mgr.SetMailRead(m->GetId());
+	mgr.SetMailRead(m->GetId(), this->isChecked());
 	//m->SetRead(this->isChecked());
 }
 
