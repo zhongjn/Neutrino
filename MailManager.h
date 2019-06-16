@@ -14,6 +14,7 @@ struct ListSource {
     enum class Type {
         All,
         Unread,
+        Read,
         Flagged,
         Spam,
         Folder
@@ -73,7 +74,7 @@ public:
     void SetMailFlag(int mailId, bool flag);
 
     //  把一封邮件标为已读
-    void SetMailRead(int mailId);
+    void SetMailRead(int mailId, bool read);
 
     // 创建一个自定义文件夹
     void AddFolder(string name);
