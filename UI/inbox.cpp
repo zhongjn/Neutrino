@@ -23,6 +23,7 @@ inbox::inbox(QWidget *parent) :
 	connect(ui->pushButton_new, SIGNAL(clicked()), this, SLOT(FolderNew()));
 	connect(ui->pushButton_rename, SIGNAL(clicked()), this, SLOT(FolderRename()));
 	connect(ui->pushButton_remove, SIGNAL(clicked()), this, SLOT(FolderRemove()));
+	connect(ui->verticalScrollBar, SIGNAL(valueChanged(int)), this, SLOT(ScroolWidget(int)));
 }
 
 inbox::~inbox()
@@ -101,9 +102,9 @@ void inbox::MailSearch(bool flag)
 	ListCondition con = ListCondition();
     if (flag) con.match_full = ui->lineEdit->text().toStdString();
 
-	int count = 0;
-	int x0 = ui->scrollArea_2->geometry().x();
-	int y0 = ui->scrollArea_2->geometry().y();//TODO: zoom
+	int count = -1;
+	//int x0 = ui->scrollArea_2->geometry().x();
+	//int y0 = ui->scrollArea_2->geometry().y();//TODO: zoom
 	//mgr.FetchMails();
 	if (flag == false) {
 		mails = mgr.ListMails(sour);
@@ -115,10 +116,10 @@ void inbox::MailSearch(bool flag)
 		//mail
 		count++;
 
-		MailChoose* mc = new MailChoose(&mail, &cid, this);
-		MailFlag* mf = new MailFlag(&mail, this);
-		MailRead* mr = new MailRead(&mail, this);
-		MailMore* mm = new MailMore(&mail, this);
+		MailChoose* mc = new MailChoose(&mail, &cid, ui->scrollArea_mail);
+		MailFlag* mf = new MailFlag(&mail, ui->scrollArea_mail);
+		MailRead* mr = new MailRead(&mail, ui->scrollArea_mail);
+		MailMore* mm = new MailMore(&mail, ui->scrollArea_mail);
 		vc.push_back(mc);
 		vf.push_back(mf);
 		vr.push_back(mr);
@@ -131,10 +132,10 @@ void inbox::MailSearch(bool flag)
 		mf->resize(CHECKBOXWIDTH, MAILHEIGHT);
 		mr->resize(CHECKBOXWIDTH, MAILHEIGHT);
 		mm->resize(BUTTONWIDTH, MAILHEIGHT);
-		mc->move(x0 + COLUNMSPACE, y0 + count * (MAILHEIGHT + ROWSPACE));
-		mr->move(x0 + 2 * COLUNMSPACE + CHECKBOXWIDTH, y0 + count * (MAILHEIGHT + ROWSPACE));
-		mm->move(x0 + 3 * COLUNMSPACE + 2 * CHECKBOXWIDTH, y0 + count * (MAILHEIGHT + ROWSPACE));
-		mf->move(x0 + 4 * COLUNMSPACE + 2 * CHECKBOXWIDTH + BUTTONWIDTH, y0 + count * (MAILHEIGHT + ROWSPACE));
+		mc->move(COLUNMSPACE, count * (MAILHEIGHT + ROWSPACE));
+		mr->move(2 * COLUNMSPACE + CHECKBOXWIDTH, count * (MAILHEIGHT + ROWSPACE));
+		mm->move(3 * COLUNMSPACE + 2 * CHECKBOXWIDTH, count * (MAILHEIGHT + ROWSPACE));
+		mf->move(4 * COLUNMSPACE + 2 * CHECKBOXWIDTH + BUTTONWIDTH, count * (MAILHEIGHT + ROWSPACE));
 		
 	}
 	
@@ -272,3 +273,34 @@ void inbox::FolderRemove()
 {
 
 }
+
+void inbox::ScroolWidget(int value)
+{
+	double p = static_cast<double>(value) / static_cast<double>(ui->verticalScrollBar->maximum());
+	ui->scrollArea_mail->move(0, MAILHEIGHT - (ui->scrollArea_mail->height() - 300) * p);
+}
+
+void inbox::wheelEvent(QWheelEvent *event) {
+	int p = event->angleDelta().y();    
+	if (p < 0) {
+		if (ui->verticalScrollBar->value() + WHEELUNIT <= 100) {
+			emit ui->verticalScrollBar->valueChanged(ui->verticalScrollBar->value() + WHEELUNIT);
+			ui->verticalScrollBar->setSliderPosition(ui->verticalScrollBar->value() + WHEELUNIT);
+		}
+		else {
+			emit ui->verticalScrollBar->valueChanged(ui->verticalScrollBar->maximum());
+			ui->verticalScrollBar->setSliderPosition(ui->verticalScrollBar->maximum());
+		}
+	}
+	else {
+		if (ui->verticalScrollBar->value() - WHEELUNIT >= 0) {
+			emit ui->verticalScrollBar->valueChanged(ui->verticalScrollBar->value() - WHEELUNIT);
+			ui->verticalScrollBar->setSliderPosition(ui->verticalScrollBar->value() - WHEELUNIT);
+		}
+		else {
+			emit ui->verticalScrollBar->valueChanged(ui->verticalScrollBar->minimum());
+			ui->verticalScrollBar->setSliderPosition(ui->verticalScrollBar->minimum());
+		}
+	}
+}
+	

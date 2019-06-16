@@ -16,6 +16,7 @@
 #define BUTTONWIDTH 540
 #define ROWSPACE 5
 #define COLUNMSPACE 5
+#define WHEELUNIT 30
 
 namespace Ui {
 class inbox;
@@ -43,6 +44,7 @@ private:
 
 	ListSource GetTreeItem();
 	void MailSearch(bool);
+	void wheelEvent(QWheelEvent *event);
 private slots:
 	void OnWriteClicked();
 	void OnReturnClicked();
@@ -56,6 +58,7 @@ private slots:
 	void FolderNew();
 	void FolderRename();
 	void FolderRemove();
+	void ScroolWidget(int);
 };
 
 #endif // INBOX_H
