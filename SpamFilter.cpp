@@ -38,7 +38,7 @@ SpamFilter::SpamFilter() {
     LoadParams(); // load existing params
     file.close();
   }
-  catch (const ifstream::failure &e) {
+  catch (const fstream::failure &e) {
     cout << "training" << endl; // initialization
     Train();
     cout << "storing" << endl;
@@ -98,7 +98,7 @@ void SpamFilter::Train() {
     }
     file.close();
   }
-  catch (const ifstream::failure &e) {
+  catch (const fstream::failure &e) {
     cerr << "Fail to open train file" << endl;
   }
   
@@ -161,7 +161,7 @@ void SpamFilter::Test() {
 
     file.close();
   }
-  catch (const ifstream::failure &e) {
+  catch (const fstream::failure &e) {
     cerr << "Fail to open test file" << endl;
   }
 
@@ -170,22 +170,20 @@ void SpamFilter::Test() {
 }
 
 void SpamFilter::StoreParams() {
-  ofstream outfile;
-  outfile.exceptions(ofstream::failbit | ofstream::badbit);
   try {
-    outfile.open(paramsPath, ios::out);
+    file.open(paramsPath, ios::out);
 
-    outfile << logpHam << ' ' << logpSpam << endl;
+    file << logpHam << ' ' << logpSpam << endl;
     for (auto val : loglHam)
-      outfile << val << ' ';
-    outfile << endl;
+      file << val << ' ';
+    file << endl;
     for (auto val : loglSpam)
-      outfile << val << ' ';
-    outfile << endl;
+      file << val << ' ';
+    file << endl;
 
-    outfile.close();
+    file.close();
   }
-  catch (const ofstream::failure &e) {
+  catch (const fstream::failure &e) {
     cerr << "Fail to store params" << endl;
   }
 }

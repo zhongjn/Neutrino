@@ -31,7 +31,7 @@ vector<double> MailParser::Parse(const Mail &mail) {
     infile.close();
   }
   catch (const ifstream::failure &e) {
-    cerr << "Fail to open file" << endl;
+    cerr << "Fail to open wordlist" << endl;
   }
 
   uint totalWords = 0, totalChars = text.length();
