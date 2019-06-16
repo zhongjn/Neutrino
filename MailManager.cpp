@@ -109,6 +109,9 @@ vector<Mail> MailManager::ListMails(const ListSource& source, const ListConditio
         case ListSource::Type::Unread:
             ss << " WHERE is_spam=0 AND read=0";
             break;
+        case ListSource::Type::Read:
+            ss << " WHERE is_spam=0 AND read=1";
+            break;
         case ListSource::Type::Flagged:
             ss << " WHERE is_spam=0 AND flag=1";
             break;
@@ -185,9 +188,9 @@ void MailManager::SetMailFlag(int mailId, bool flag) {
     sqlite3_exec(db, ss.str().c_str(), nullptr, nullptr, nullptr);
 }
 
-void MailManager::SetMailRead(int mailId) {
+void MailManager::SetMailRead(int mailId, bool read) {
     stringstream ss;
-    ss << "UPDATE mails SET read=1 WHERE id=" << mailId;
+    ss << "UPDATE mails SET read=" << read << " WHERE id=" << mailId;
     sqlite3_exec(db, ss.str().c_str(), nullptr, nullptr, nullptr);
 }
 
