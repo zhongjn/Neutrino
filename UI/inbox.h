@@ -12,7 +12,7 @@
 #include "UI/Mailitem.h"
 
 #define MAILHEIGHT 25
-#define CHECKBOXWIDTH 25
+#define CHECKBOXWIDTH 20
 #define BUTTONWIDTH 540
 #define ROWSPACE 5
 #define COLUNMSPACE 5

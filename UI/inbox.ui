@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>450</height>
    </rect>
   </property>
   <property name="font">
@@ -21,9 +21,9 @@
   <widget class="QScrollArea" name="scrollArea_2">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>130</x>
      <y>50</y>
-     <width>651</width>
+     <width>671</width>
      <height>541</height>
     </rect>
    </property>
@@ -41,14 +41,14 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>649</width>
+      <width>669</width>
       <height>539</height>
      </rect>
     </property>
     <widget class="QScrollBar" name="verticalScrollBar">
      <property name="geometry">
       <rect>
-       <x>630</x>
+       <x>650</x>
        <y>0</y>
        <width>20</width>
        <height>541</height>
@@ -63,7 +63,7 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>630</width>
+       <width>650</width>
        <height>23</height>
       </rect>
      </property>
@@ -80,7 +80,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>628</width>
+        <width>648</width>
         <height>21</height>
        </rect>
       </property>
@@ -123,7 +123,7 @@
       <widget class="QComboBox" name="comboBox">
        <property name="geometry">
         <rect>
-         <x>500</x>
+         <x>420</x>
          <y>0</y>
          <width>81</width>
          <height>22</height>
@@ -145,28 +145,10 @@
         </property>
        </item>
       </widget>
-      <widget class="QPushButton" name="pushButton_8">
-       <property name="geometry">
-        <rect>
-         <x>340</x>
-         <y>0</y>
-         <width>80</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Forward</string>
-       </property>
-      </widget>
       <widget class="QComboBox" name="comboBox_2">
        <property name="geometry">
         <rect>
-         <x>420</x>
+         <x>340</x>
          <y>0</y>
          <width>81</width>
          <height>22</height>
@@ -211,6 +193,24 @@
         <string>Choose all/none</string>
        </property>
       </widget>
+      <widget class="QPushButton" name="pushButton_write">
+       <property name="geometry">
+        <rect>
+         <x>570</x>
+         <y>0</y>
+         <width>80</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>write</string>
+       </property>
+      </widget>
      </widget>
     </widget>
     <widget class="QScrollArea" name="scrollArea_mail">
@@ -218,7 +218,7 @@
       <rect>
        <x>0</x>
        <y>25</y>
-       <width>630</width>
+       <width>650</width>
        <height>600</height>
       </rect>
      </property>
@@ -230,7 +230,7 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>628</width>
+        <width>648</width>
         <height>598</height>
        </rect>
       </property>
@@ -282,7 +282,7 @@
     <rect>
      <x>0</x>
      <y>50</y>
-     <width>151</width>
+     <width>131</width>
      <height>551</height>
     </rect>
    </property>
@@ -407,7 +407,7 @@
   <widget class="QPushButton" name="pushButton_quit">
    <property name="geometry">
     <rect>
-     <x>410</x>
+     <x>490</x>
      <y>20</y>
      <width>56</width>
      <height>22</height>
@@ -422,28 +422,10 @@
     <string>quit</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_write">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>20</y>
-     <width>56</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>write</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="pushButton_logout">
    <property name="geometry">
     <rect>
-     <x>470</x>
+     <x>550</x>
      <y>20</y>
      <width>56</width>
      <height>22</height>
@@ -461,7 +443,7 @@
   <widget class="QPushButton" name="pushButton_new">
    <property name="geometry">
     <rect>
-     <x>107</x>
+     <x>87</x>
      <y>53</y>
      <width>40</width>
      <height>17</height>
@@ -474,7 +456,7 @@
   <widget class="QPushButton" name="pushButton_remove">
    <property name="geometry">
     <rect>
-     <x>107</x>
+     <x>87</x>
      <y>87</y>
      <width>40</width>
      <height>17</height>
@@ -487,7 +469,7 @@
   <widget class="QPushButton" name="pushButton_rename">
    <property name="geometry">
     <rect>
-     <x>107</x>
+     <x>87</x>
      <y>70</y>
      <width>40</width>
      <height>17</height>

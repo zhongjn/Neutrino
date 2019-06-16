@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     cond.match_full = "123";
 
     auto mails = mgr.ListMails(ListSource(), cond);
-
+	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     return RunQt(argc, argv);
 
 }
