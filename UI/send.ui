@@ -19,6 +19,29 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">#widget send{
+background-image: url(:/image/image/background1.jpg);}</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>50</y>
+     <width>54</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>   From:</string>
+   </property>
+  </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
@@ -30,6 +53,7 @@
    </property>
    <property name="font">
     <font>
+     <family>微软雅黑</family>
      <pointsize>10</pointsize>
     </font>
    </property>
@@ -48,6 +72,7 @@
    </property>
    <property name="font">
     <font>
+     <family>微软雅黑</family>
      <pointsize>10</pointsize>
     </font>
    </property>
@@ -66,6 +91,7 @@
    </property>
    <property name="font">
     <font>
+     <family>微软雅黑</family>
      <pointsize>13</pointsize>
      <weight>75</weight>
      <bold>true</bold>
@@ -73,6 +99,21 @@
    </property>
    <property name="text">
     <string>Send the email</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>50</y>
+     <width>660</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+    </font>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEdit_2">
@@ -84,6 +125,11 @@
      <height>20</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+    </font>
+   </property>
   </widget>
   <widget class="QLineEdit" name="lineEdit_3">
    <property name="geometry">
@@ -93,6 +139,11 @@
      <width>660</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+    </font>
    </property>
   </widget>
   <widget class="Line" name="line">
@@ -106,6 +157,7 @@
    </property>
    <property name="font">
     <font>
+     <family>微软雅黑</family>
      <pointsize>10</pointsize>
     </font>
    </property>
@@ -124,6 +176,7 @@
    </property>
    <property name="font">
     <font>
+     <family>微软雅黑</family>
      <pointsize>10</pointsize>
     </font>
    </property>
@@ -145,6 +198,7 @@
    </property>
    <property name="font">
     <font>
+     <family>微软雅黑</family>
      <pointsize>10</pointsize>
     </font>
    </property>
@@ -166,6 +220,7 @@
    </property>
    <property name="font">
     <font>
+     <family>微软雅黑</family>
      <pointsize>10</pointsize>
     </font>
    </property>
@@ -187,6 +242,7 @@
    </property>
    <property name="font">
     <font>
+     <family>微软雅黑</family>
      <pointsize>10</pointsize>
     </font>
    </property>
@@ -203,11 +259,38 @@
      <height>351</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+    </font>
+   </property>
    <property name="cursor" stdset="0">
     <cursorShape>IBeamCursor</cursorShape>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_send">
+  <widget class="QPushButton" name="pushButton_4">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>160</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="text">
+    <string>Send</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_5">
    <property name="geometry">
     <rect>
      <x>650</x>
@@ -218,6 +301,7 @@
    </property>
    <property name="font">
     <font>
+     <family>微软雅黑</family>
      <pointsize>10</pointsize>
     </font>
    </property>
@@ -237,6 +321,11 @@
      <height>351</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+    </font>
+   </property>
    <property name="orientation">
     <enum>Qt::Vertical</enum>
    </property>
@@ -244,11 +333,16 @@
   <widget class="QPushButton" name="pushButton_return">
    <property name="geometry">
     <rect>
-     <x>720</x>
+     <x>705</x>
      <y>20</y>
-     <width>56</width>
-     <height>17</height>
+     <width>61</width>
+     <height>21</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>微软雅黑</family>
+    </font>
    </property>
    <property name="text">
     <string>return</string>
