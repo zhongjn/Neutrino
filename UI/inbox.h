@@ -12,7 +12,7 @@
 #include "UI/Mailitem.h"
 
 #define MAILHEIGHT 25
-#define CHECKBOXWIDTH 60
+#define CHECKBOXWIDTH 25
 #define BUTTONWIDTH 540
 #define ROWSPACE 5
 #define COLUNMSPACE 5
@@ -29,9 +29,14 @@ public:
     explicit inbox(QWidget *parent = 0);
     ~inbox();
 	bool exec();
+
+	vector<Mail> mails;
+	vector<Mail*> cm;
 private:
-    Ui::inbox* ui;
-	QEventLoop* ptLoop;
+    Ui::inbox *ui;
+	QEventLoop *ptLoop;
+	vector<MailChoose*> vc;
+	vector<MailFlag*> vf;
 	vector<MailRead*> vr;
 	vector<MailMore*> vm;
 	bool closeResult;
@@ -43,6 +48,7 @@ private slots:
 	void OnReturnClicked();
 	void OnTreeChosen();
 	void OnSearchEnter();
+
 };
 
 #endif // INBOX_H

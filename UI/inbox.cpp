@@ -21,12 +21,22 @@ inbox::~inbox()
 {
     delete ui;
 	delete ptLoop;
+	for (auto &v : vc) {
+		delete v;
+	}
+	for (auto &v : vf) {
+		delete v;
+	}
 	for (auto &v : vr) {
 		delete v;
 	}
 	for (auto &v : vm) {
 		delete v;
 	}
+	vc.clear();
+	vf.clear();
+	vr.clear();
+	vm.clear();
 }
 
 bool inbox::exec()
@@ -66,12 +76,20 @@ void inbox::OnSearchEnter()
 
 void inbox::MailSearch(bool flag)
 {
+	for (auto &v : vc) {
+		delete v;
+	}
+	for (auto &v : vf) {
+		delete v;
+	}
 	for (auto &v : vr) {
 		delete v;
 	}
 	for (auto &v : vm) {
 		delete v;
 	}
+	vc.clear();
+	vf.clear();
 	vr.clear();
 	vm.clear();
 
@@ -83,7 +101,6 @@ void inbox::MailSearch(bool flag)
 	int x0 = ui->scrollArea_2->geometry().x();
 	int y0 = ui->scrollArea_2->geometry().y();//TODO: zoom
 	//mgr.FetchMails();
-	vector<Mail> mails;
 	if (flag == false) {
 		mails = mgr.ListMails(sour);
 	}
@@ -94,25 +111,27 @@ void inbox::MailSearch(bool flag)
 		//mail
 		count++;
 
-		MailRead* mr = new MailRead(mail, this);
-		MailMore* mm = new MailMore(mail, this);
-		//TO DO: flag
+		MailChoose* mc = new MailChoose(&mail, &cm, this);
+		MailFlag* mf = new MailFlag(&mail, this);
+		MailRead* mr = new MailRead(&mail, this);
+		MailMore* mm = new MailMore(&mail, this);
+		vc.push_back(mc);
+		vf.push_back(mf);
 		vr.push_back(mr);
 		vm.push_back(mm);
+		mc->show();
+		mf->show();
 		mr->show();
 		mm->show();
+		mc->resize(CHECKBOXWIDTH, MAILHEIGHT);
+		mf->resize(CHECKBOXWIDTH, MAILHEIGHT);
 		mr->resize(CHECKBOXWIDTH, MAILHEIGHT);
-		mr->move(x0, y0 + count * (MAILHEIGHT + ROWSPACE));
 		mm->resize(BUTTONWIDTH, MAILHEIGHT);
-		mm->move(x0 + CHECKBOXWIDTH + COLUNMSPACE, y0 + count * (MAILHEIGHT + ROWSPACE));
-		if (1) {//TO dO
-			mr->setChecked(true);
-		}
-		else {
-			mr->setChecked(false);
-		}
-		mr->setText("unread");
-
+		mc->move(x0 + COLUNMSPACE, y0 + count * (MAILHEIGHT + ROWSPACE));
+		mr->move(x0 + 2 * COLUNMSPACE + CHECKBOXWIDTH, y0 + count * (MAILHEIGHT + ROWSPACE));
+		mm->move(x0 + 3 * COLUNMSPACE + 2 * CHECKBOXWIDTH, y0 + count * (MAILHEIGHT + ROWSPACE));
+		mf->move(x0 + 4 * COLUNMSPACE + 2 * CHECKBOXWIDTH + BUTTONWIDTH, y0 + count * (MAILHEIGHT + ROWSPACE));
+		
 	}
 	
 }
@@ -151,3 +170,4 @@ ListSource inbox::GetTreeItem()
 
 	return source;
 }
+

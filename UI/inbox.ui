@@ -45,19 +45,6 @@
       <height>539</height>
      </rect>
     </property>
-    <widget class="QScrollBar" name="verticalScrollBar">
-     <property name="geometry">
-      <rect>
-       <x>630</x>
-       <y>0</y>
-       <width>20</width>
-       <height>541</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-    </widget>
     <widget class="QScrollArea" name="scrollArea_3">
      <property name="geometry">
       <rect>
@@ -82,7 +69,7 @@
       <widget class="QComboBox" name="comboBox">
        <property name="geometry">
         <rect>
-         <x>383</x>
+         <x>500</x>
          <y>0</y>
          <width>81</width>
          <height>22</height>
@@ -112,7 +99,7 @@
       <widget class="QPushButton" name="pushButton_7">
        <property name="geometry">
         <rect>
-         <x>0</x>
+         <x>260</x>
          <y>0</y>
          <width>80</width>
          <height>22</height>
@@ -130,7 +117,7 @@
       <widget class="QPushButton" name="pushButton_8">
        <property name="geometry">
         <rect>
-         <x>80</x>
+         <x>340</x>
          <y>0</y>
          <width>80</width>
          <height>22</height>
@@ -148,7 +135,7 @@
       <widget class="QPushButton" name="pushButton_9">
        <property name="geometry">
         <rect>
-         <x>160</x>
+         <x>120</x>
          <y>0</y>
          <width>141</width>
          <height>22</height>
@@ -166,7 +153,7 @@
       <widget class="QComboBox" name="comboBox_2">
        <property name="geometry">
         <rect>
-         <x>302</x>
+         <x>420</x>
          <y>0</y>
          <width>81</width>
          <height>22</height>
@@ -189,9 +176,22 @@
        </item>
        <item>
         <property name="text">
-         <string>star</string>
+         <string>flag</string>
         </property>
        </item>
+      </widget>
+      <widget class="QPushButton" name="pushButton">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>120</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Choose all/none</string>
+       </property>
       </widget>
      </widget>
     </widget>
@@ -339,7 +339,7 @@
    </item>
    <item>
     <property name="text">
-     <string>Inbox Floder</string>
+     <string>Folder</string>
     </property>
     <property name="font">
      <font>
@@ -349,26 +349,6 @@
       <bold>true</bold>
      </font>
     </property>
-    <item>
-     <property name="text">
-      <string>新建项目</string>
-     </property>
-     <item>
-      <property name="text">
-       <string>新建子项目</string>
-      </property>
-     </item>
-    </item>
-    <item>
-     <property name="text">
-      <string>新建项目</string>
-     </property>
-     <item>
-      <property name="text">
-       <string>新建子项目</string>
-      </property>
-     </item>
-    </item>
    </item>
   </widget>
   <widget class="QPushButton" name="pushButton_quit">

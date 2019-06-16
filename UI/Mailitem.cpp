@@ -1,57 +1,70 @@
 #include "UI/Mailitem.h"
 
-MailMore::MailMore(Mail mail, QWidget *parent) : QPushButton(parent)
+MailMore::MailMore(Mail *mail, QWidget *parent) : QPushButton(parent)
 {
 	m = mail;
-	this->setText(QString::fromStdString(mail.GetSubject()));
+	this->setText(QString::fromStdString(m->GetSubject()));
 	connect(this, SIGNAL(clicked()), this, SLOT(OnMoreClicked()));
 }
 
 void MailMore::OnMoreClicked()
 {
-	QDialog* w = new QDialog();
+	m->SetRead(true);
+	QDialog *w = new QDialog();
 	//TO DO: UI
-	QPlainTextEdit* m = new QPlainTextEdit(w);
-	m->appendPlainText(QString::fromStdString(this->m.GetSubject()));
-	m->setFocusPolicy(Qt::NoFocus);
+	QPlainTextEdit *t = new QPlainTextEdit(w);
+	t->appendPlainText(QString::fromStdString(m->GetSubject()));
+	t->setFocusPolicy(Qt::NoFocus);
 	//TO DO: read
-	m->show();
+	t->show();
 	w->exec();
 }
 
+MailChoose::MailChoose(Mail *mail, vector<Mail*> *cm, QWidget *parent) : QCheckBox(parent)
+{
+	m = mail;
+	c = cm;
+	//this->setText("");
+	connect(this, SIGNAL(clicked()), this, SLOT(OnChooseClicked()));
+}
 
-MailRead::MailRead(Mail mail, QWidget *parent) : QCheckBox(parent)
+void MailChoose::OnChooseClicked()
+{
+	if (this->isChecked() == true) {
+		c->push_back(m);
+	}
+	else {
+		for (vector<Mail*>::iterator iter = c->begin(); iter != c->end(); iter++) {
+			if (*iter == m) {
+				c->erase(iter);
+			}
+		}
+	}
+	
+}
+
+MailRead::MailRead(Mail *mail, QWidget *parent) : QCheckBox(parent)
 {
 	m = mail;
 	this->setText("unread");
+	this->setChecked(m->GetRead());
 	connect(this, SIGNAL(clicked()), this, SLOT(OnReadClicked()));
 }
 
 void MailRead::OnReadClicked()
 {
-	if (this->isChecked() == true) {
-		//mail
-	}
-	else {
-		//mail
-	}
+	m->SetRead(this->isChecked());
 }
 
-MailFlag::MailFlag(Mail mail, QWidget *parent) : QCheckBox(parent)
+MailFlag::MailFlag(Mail *mail, QWidget *parent) : QCheckBox(parent)
 {
 	m = mail;
 	this->setText("flag");
-	connect(this, SIGNAL(clicked()), this, SLOT(OnReadClicked()));
+	this->setChecked(m->GetFlag());
+	connect(this, SIGNAL(clicked()), this, SLOT(OnFlagClicked()));
 }
 
 void MailFlag::OnFlagClicked()
 {
-	if (this->isChecked() == true) {
-		this->setChecked(false);
-		//mail
-	}
-	else {
-		this->setChecked(true);
-		//mail
-	}
+	m->SetFlag(this->isChecked());
 }
