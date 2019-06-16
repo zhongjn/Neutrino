@@ -31,7 +31,7 @@ public:
 	bool exec();
 
 	vector<Mail> mails;
-	vector<Mail*> cm;
+	vector<int> cid;
 private:
     Ui::inbox *ui;
 	QEventLoop *ptLoop;

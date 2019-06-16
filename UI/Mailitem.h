@@ -7,7 +7,7 @@
 #include <QPlainTextEdit>
 #include <vector>
 #include "MailManager.h"
-
+#include "Common.h"
 #include <iostream>
 
 class MailMore : public QPushButton
@@ -28,8 +28,8 @@ class MailChoose : public QCheckBox
 
 public:
 	Mail *m;
-	vector<Mail*> *c;
-	explicit MailChoose(Mail *mail, vector<Mail*> *cm, QWidget *parent = 0);
+	vector<int> *c;
+	explicit MailChoose(Mail *mail, vector<int> *cid, QWidget *parent = 0);
 	//~MailRead();
 public slots:
 	void OnChooseClicked();

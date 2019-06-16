@@ -9,7 +9,7 @@ MailMore::MailMore(Mail *mail, QWidget *parent) : QPushButton(parent)
 
 void MailMore::OnMoreClicked()
 {
-	m->SetRead(true);
+	mgr.SetMailRead(m->GetId());
 	QDialog *w = new QDialog();
 	//TO DO: UI
 	QPlainTextEdit *t = new QPlainTextEdit(w);
@@ -20,23 +20,30 @@ void MailMore::OnMoreClicked()
 	w->exec();
 }
 
-MailChoose::MailChoose(Mail *mail, vector<Mail*> *cm, QWidget *parent) : QCheckBox(parent)
+MailChoose::MailChoose(Mail *mail, vector<int> *cid, QWidget *parent) : QCheckBox(parent)
 {
 	m = mail;
-	c = cm;
-	//this->setText("");
+	c = cid;
+	this->setChecked(false);
+	for (vector<int>::iterator iter = c->begin(); iter != c->end(); iter++) {
+		if (*iter == m->GetId()) {
+			this->setChecked(true);
+			break;
+		}
+	}
 	connect(this, SIGNAL(clicked()), this, SLOT(OnChooseClicked()));
 }
 
 void MailChoose::OnChooseClicked()
 {
 	if (this->isChecked() == true) {
-		c->push_back(m);
+		c->push_back(m->GetId());
 	}
 	else {
-		for (vector<Mail*>::iterator iter = c->begin(); iter != c->end(); iter++) {
-			if (*iter == m) {
-				c->erase(iter);
+		for (vector<int>::iterator iter = c->begin(); iter != c->end(); iter++) {
+			if (*iter == m->GetId()) {
+				iter = c->erase(iter);
+				break;
 			}
 		}
 	}
@@ -53,7 +60,8 @@ MailRead::MailRead(Mail *mail, QWidget *parent) : QCheckBox(parent)
 
 void MailRead::OnReadClicked()
 {
-	m->SetRead(this->isChecked());
+	mgr.SetMailRead(m->GetId());
+	//m->SetRead(this->isChecked());
 }
 
 MailFlag::MailFlag(Mail *mail, QWidget *parent) : QCheckBox(parent)
@@ -66,5 +74,6 @@ MailFlag::MailFlag(Mail *mail, QWidget *parent) : QCheckBox(parent)
 
 void MailFlag::OnFlagClicked()
 {
-	m->SetFlag(this->isChecked());
+	mgr.SetMailFlag(m->GetId(), this->isChecked());
+	//m->SetFlag(this->isChecked());
 }

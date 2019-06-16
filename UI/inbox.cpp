@@ -33,10 +33,6 @@ inbox::~inbox()
 	for (auto &v : vm) {
 		delete v;
 	}
-	vc.clear();
-	vf.clear();
-	vr.clear();
-	vm.clear();
 }
 
 bool inbox::exec()
@@ -111,7 +107,7 @@ void inbox::MailSearch(bool flag)
 		//mail
 		count++;
 
-		MailChoose* mc = new MailChoose(&mail, &cm, this);
+		MailChoose* mc = new MailChoose(&mail, &cid, this);
 		MailFlag* mf = new MailFlag(&mail, this);
 		MailRead* mr = new MailRead(&mail, this);
 		MailMore* mm = new MailMore(&mail, this);
