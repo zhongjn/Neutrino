@@ -17,6 +17,9 @@ inbox::inbox(QWidget *parent) :
 	connect(ui->lineEdit, SIGNAL(returnPressed()), this, SLOT(OnSearchEnter()));
 	connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(OnChooseAll()));
 	connect(ui->pushButton_9, SIGNAL(clicked()), this, SLOT(OnReadAll()));
+	connect(ui->pushButton_7, SIGNAL(clicked()), this, SLOT(OnDeleteClicked()));
+	connect(ui->comboBox_2, SIGNAL(currentIndexChanged(QString)), this, SLOT(OnMark()));
+	connect(ui->comboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(OnMove()));
 }
 
 inbox::~inbox()
@@ -144,28 +147,23 @@ ListSource inbox::GetTreeItem()
 	}
 	if (item->text(0).toStdString() == "ALL") {
 		source.type = ListSource::Type::All;
-		source.folderId = -1;
 	}
 	else if (item->text(0).toStdString() == "Read") {
 		source.type = ListSource::Type::Read;
-		source.folderId = -1;
 	}
 	else if (item->text(0).toStdString() == "Unread") {
 		source.type = ListSource::Type::Unread;
-		source.folderId = -1;
 	}
 	else if (item->text(0).toStdString() == "Flagged") {
 		source.type = ListSource::Type::Flagged;
-		source.folderId = -1;
 	}
 	else if (item->text(0).toStdString() == "Deleted") {
 		source.type = ListSource::Type::Spam;
-		source.folderId = -1;
 	}
-	//else if (item->text(0).toStdString() == "") {
-	//	source.type = ListSource::Type::Folder;
-	//	//	source.folderId = 0;
-	//}
+	else if (item->text(0).toStdString() == "Folder") {
+		source.type = ListSource::Type::Folder;
+		//	source.folderId = 0;
+	}
 	else {
 		source.type = ListSource::Type::All;
 	}
@@ -201,4 +199,41 @@ void inbox::OnReadAll()
 		mgr.SetMailRead(iter->GetId(), true);
 	}
 	MailSearch(false);
+}
+
+void inbox::OnDeleteClicked()
+{
+	for (vector<int>::iterator iter = cid.begin(); iter != cid.end(); iter++) {
+		;
+	}
+	MailSearch(false);
+}
+
+void inbox::OnMark()
+{
+	if (ui->comboBox_2->currentIndex() == 1) {
+		for (vector<int>::iterator iter = cid.begin(); iter != cid.end(); iter++) {
+			mgr.SetMailRead(*iter, true);
+		}
+	}
+	else if (ui->comboBox_2->currentIndex() == 2) {
+		for (vector<int>::iterator iter = cid.begin(); iter != cid.end(); iter++) {
+			mgr.SetMailRead(*iter, false);
+		}
+	}
+	else if (ui->comboBox_2->currentIndex() == 3) {
+		for (vector<int>::iterator iter = cid.begin(); iter != cid.end(); iter++) {
+			mgr.SetMailFlag(*iter, false);
+		}
+	}
+	else if (0) {
+		;
+	}
+	ui->comboBox_2->setCurrentIndex(0);
+	MailSearch(false);
+}
+
+void inbox::OnMove()
+{
+
 }

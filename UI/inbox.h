@@ -50,6 +50,9 @@ private slots:
 	void OnSearchEnter();
 	void OnChooseAll();
 	void OnReadAll();
+	void OnDeleteClicked();
+	void OnMark();
+	void OnMove();
 };
 
 #endif // INBOX_H
