@@ -17,7 +17,6 @@ public:
 
   bool Predict(const Mail &mail); // interface
   SpamFilter();
-  ~SpamFilter();
 
 private:
   vector<double> attrs; // attributes
@@ -28,7 +27,7 @@ private:
   vector<double> loglHam; // log likelihood
   vector<double> loglSpam;
 
-  uint tp, fp, fn, tn; // evaluations
+  fstream file;
 
   void Train();
   void Test();

@@ -2,14 +2,6 @@
 
 const string wordListPath = "spambase/wordlist.txt";
 
-MailParser::MailParser() {
-
-}
-
-MailParser::~MailParser() {
-
-}
-
 // hard-coded parser restricted to spambase
 vector<double> MailParser::Parse(const Mail &mail) {
   string text = mail.GetSubject() + ' ' + mail.GetContent();
@@ -26,17 +18,21 @@ vector<double> MailParser::Parse(const Mail &mail) {
   // count word frequencies
   vector<string> wordlist;
   unordered_map<string, uint> freq;
-  ifstream infile(wordListPath, ios::in);
-  if (!infile) {
+
+  ifstream infile;
+  infile.exceptions(ifstream::failbit | ifstream::badbit);
+  try {
+    infile.open(wordListPath, ios::in);
+    while (!infile.eof()) {
+      infile >> s;
+      wordlist.push_back(s);
+      freq[s] = 0;
+    }
+    infile.close();
+  }
+  catch (const ifstream::failure &e) {
     cerr << "Fail to open file" << endl;
-    exit(1);
   }
-  while (!infile.eof()) {
-    infile >> s;
-    wordlist.push_back(s);
-    freq[s] = 0;
-  }
-  infile.close();
 
   uint totalWords = 0, totalChars = text.length();
 
