@@ -261,17 +261,31 @@ void inbox::OnMove()
 
 void inbox::FolderNew()
 {	
-	;
+	string s;
+	StringInput in(&s);
+	in.exec();
+	//cout << s << endl;
+	mgr.AddFolder(s);
+	QTreeWidgetItem *folder1 = new QTreeWidgetItem(folder, QStringList(QString("Band1")));
+	ui->treeWidget->
 }
 
 void inbox::FolderRename()
 {
-	;
+	int fid;
+	vector<Folder> folders = mgr.ListFolders();
+	for (auto& folder : folders) {
+		;
+	}
+	string s;
+	StringInput in(&s);
+	in.exec();
+	mgr.RenameFolder(fid, s);
 }
 
 void inbox::FolderRemove()
 {
-
+	
 }
 
 void inbox::ScroolWidget(int value)

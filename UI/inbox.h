@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QTreeWidget>
 #include <QEventLoop>
+#include <QMouseEvent>
 #include <vector>
 #include "UI/send.h"
 #include "MailManager.h"
