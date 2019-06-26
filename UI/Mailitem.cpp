@@ -1,17 +1,21 @@
 #include "UI/Mailitem.h"
 
-MailMore::MailMore(Mail *mail, QWidget *parent) : QPushButton(parent)
+MailMore::MailMore(Mail *mail, bool *block, function<void()> onRefresh, QWidget *parent) : QPushButton(parent)
 {
 	m = mail;
+	this->block = block;
+	this->onRefresh = onRefresh;
 	this->setText(QString::fromStdString(m->GetSubject()));
-	connect(this, SIGNAL(clicked()), this, SLOT(OnMoreClicked()));
-}
+	connect(this, SIGNAL(clicked()), this, SLOT(OnMoreClicked()));}
 
 void MailMore::OnMoreClicked()
 {
 	mgr.SetMailRead(m->GetId(), true);
+	*block = true;
 	inbox_detail *w = new inbox_detail(m, parentWidget());
-	w->show();
+	w->exec();
+	*block = false;
+	onRefresh();
 }
 
 MailChoose::MailChoose(Mail *mail, vector<int> *cid, QWidget *parent) : QCheckBox(parent)

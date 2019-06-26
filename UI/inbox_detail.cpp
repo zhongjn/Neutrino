@@ -7,10 +7,12 @@ inbox_detail::inbox_detail(Mail *mail, QWidget *parent) :
 {
 	ui->setupUi(this);
 	m = mail;
+	ptLoop = new QEventLoop(this);
 	ui->label_title->setText(QString::fromStdString(mail->GetSubject()));
 	ui->label_sender->setText(QString::fromStdString(mail->GetSender()));
 	//ui->label_time->setText(QString::fromStdString(mail->GetSender()));
-	ui->label_time->setText("2019-06-11");
+	//TODO
+	ui->label_time->setText("2019-06-12");
 	ui->textBrowser->setText(QString::fromStdString(mail->GetContent()));
 
 	connect(ui->pushButton_back, SIGNAL(clicked()), this, SLOT(OnBackClicked()));
@@ -24,8 +26,15 @@ inbox_detail::~inbox_detail()
 	delete ui;
 }
 
+void inbox_detail::exec()
+{
+	this->show();
+	ptLoop->exec();
+}
+
 void inbox_detail::OnBackClicked()
 {
+	ptLoop->quit();
 	this->close();
 }
 

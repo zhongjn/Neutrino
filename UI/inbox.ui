@@ -120,7 +120,7 @@
         <string>Delete</string>
        </property>
       </widget>
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="comboBox_move">
        <property name="geometry">
         <rect>
          <x>420</x>
@@ -136,7 +136,7 @@
        </item>
        <item>
         <property name="text">
-         <string>new folder</string>
+         <string>all</string>
         </property>
        </item>
        <item>
@@ -144,8 +144,13 @@
          <string>spam</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>new folder</string>
+        </property>
+       </item>
       </widget>
-      <widget class="QComboBox" name="comboBox_2">
+      <widget class="QComboBox" name="comboBox_mark">
        <property name="geometry">
         <rect>
          <x>340</x>
@@ -156,7 +161,7 @@
        </property>
        <item>
         <property name="text">
-         <string>Mard as</string>
+         <string>Mark as</string>
         </property>
        </item>
        <item>
@@ -299,7 +304,7 @@
    </property>
    <column>
     <property name="text">
-     <string>Func</string>
+     <string>My Inbox</string>
     </property>
     <property name="font">
      <font>
