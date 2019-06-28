@@ -35,7 +35,7 @@ public:
     /**
     Base64 character set.
     **/
-    static const std::string CHARSET;
+    const std::string CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     
     /**
     Setting the line policy.

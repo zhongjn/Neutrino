@@ -4,6 +4,8 @@
 #include "Nullable.h"
 #include "Property.h"
 #include "Folder.h"
+#include "Utility.h"
+#include "CryptoProvider.h"
 #include "ThirdParty/sqlite3/sqlite3.h"
 #include <vector>
 
@@ -41,10 +43,16 @@ struct ListCondition {
 
 class MailManager {
     PROPERTY_WRITE(Nullable<CredentialInfo>, Credential)
-    // TODO: 其他属性？
+        // TODO: 其他属性？
 
 private:
     sqlite3* db = nullptr;
+    Nullable<CredentialInfo> cred = Null();
+    CryptoProvider* crypt_cred = new Win32CryptoProvider();
+    CryptoProvider* crypt_mail = new AES256CryptoProvider("asd12@!#*asd");
+
+    Nullable<CredentialInfo> LoadSavedCredential();
+    bool VerifyCredential(const CredentialInfo& cred);
 
 public:
     MailManager();
@@ -52,12 +60,15 @@ public:
     MailManager(MailManager&&) = default;
     ~MailManager();
 
+    bool IsLoginNeeded() { return !cred; }
+    bool Login(const CredentialInfo& cred, bool rememberMe);
+
     // 拉取在线邮件，写到本地
     void FetchMails();
 
     // 读取本地所有邮件，source指定读取源（全部、某个文件夹、垃圾箱），cond指定筛选条件
     vector<Mail> ListMails(const ListSource& source = ListSource(), const ListCondition& cond = ListCondition()) const; // 列出所有本地的邮件（给UI用) TODO: 筛选、检索
-    
+
     // 发送一封邮件
     void SendMail(const Mail& mail) const;
 

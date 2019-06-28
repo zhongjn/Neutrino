@@ -25,9 +25,6 @@ namespace mailio
 {
 
 
-    const string base64::CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-
     base64::base64(codec::line_len_policy_t line_policy) : codec(line_policy)
     {
     }
