@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QTreeWidget>
 #include <QEventLoop>
+#include <QMouseEvent>
+#include <QMessageBox>
 #include <vector>
 #include "UI/send.h"
 #include "MailManager.h"
@@ -36,6 +38,7 @@ public:
 private:
     Ui::inbox *ui;
 	QEventLoop *ptLoop;
+	bool block;
 	vector<MailChoose*> vc;
 	vector<MailFlag*> vf;
 	vector<MailRead*> vr;
@@ -44,7 +47,10 @@ private:
 
 	ListSource GetTreeItem();
 	void MailSearch(bool);
-	void wheelEvent(QWheelEvent *event);
+	void WheelEvent(QWheelEvent *event);
+	int FindFolderId(string);
+	int FindFolderIndex(string);
+	QTreeWidgetItem *FindItemFolder(string Folder);
 private slots:
 	void OnWriteClicked();
 	void OnReturnClicked();
@@ -55,7 +61,7 @@ private slots:
 	void OnDeleteClicked();
 	void OnMark();
 	void OnMove();
-	void FolderNew();
+	int FolderNew();
 	void FolderRename();
 	void FolderRemove();
 	void ScroolWidget(int);

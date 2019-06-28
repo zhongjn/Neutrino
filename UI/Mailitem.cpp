@@ -1,17 +1,21 @@
 #include "UI/Mailitem.h"
 
-MailMore::MailMore(Mail *mail, QWidget *parent) : QPushButton(parent)
+MailMore::MailMore(Mail *mail, bool *block, function<void()> onRefresh, QWidget *parent) : QPushButton(parent)
 {
 	m = mail;
+	this->block = block;
+	this->onRefresh = onRefresh;
 	this->setText(QString::fromStdString(m->GetSubject()));
-	connect(this, SIGNAL(clicked()), this, SLOT(OnMoreClicked()));
-}
+	connect(this, SIGNAL(clicked()), this, SLOT(OnMoreClicked()));}
 
 void MailMore::OnMoreClicked()
 {
 	mgr.SetMailRead(m->GetId(), true);
+	*block = true;
 	inbox_detail *w = new inbox_detail(m, parentWidget());
-	w->show();
+	w->exec();
+	*block = false;
+	onRefresh();
 }
 
 MailChoose::MailChoose(Mail *mail, vector<int> *cid, QWidget *parent) : QCheckBox(parent)
@@ -68,4 +72,48 @@ MailFlag::MailFlag(Mail *mail, QWidget *parent) : QCheckBox(parent)
 void MailFlag::OnFlagClicked()
 {
 	mgr.SetMailFlag(m->GetId(), this->isChecked());
+}
+
+StringInput::StringInput(string *s, QWidget *parent) : QDialog(parent)
+{
+	ss = s;
+	this->setFixedSize(InputWidth, InputHeight);
+	label = new QLabel(this);
+	lineEdit = new QLineEdit(this);
+	pushButton_ok = new QPushButton(this);
+	pushButton_clear = new QPushButton(this);
+	label->setText("Please enter the name:");
+	QFont font("Microsoft YaHei", 12, 50);
+	label->setFont(font);
+	label->move(InputWidth / 20, InputHeight / 20);
+	lineEdit->setFixedSize(InputWidth * 2 / 3, InputHeight / 5);
+	lineEdit->move(InputWidth / 6, InputHeight / 3);
+	pushButton_ok->setText("ok");
+	pushButton_ok->setFixedSize(InputWidth / 4, InputHeight / 5);
+	pushButton_ok->move(InputWidth / 6, InputHeight * 2 / 3);
+	pushButton_clear->setText("close");
+	pushButton_clear->setFixedSize(InputWidth / 4, InputHeight / 5);
+	pushButton_clear->move(InputWidth * 7 / 12, InputHeight * 2 / 3);
+
+	connect(pushButton_ok, SIGNAL(clicked()), this, SLOT(OnOkClicked()));
+	connect(pushButton_clear, SIGNAL(clicked()), this, SLOT(OnCloseClicked()));
+}
+
+StringInput::~StringInput()
+{
+	delete label;
+	delete lineEdit;
+	delete pushButton_ok;
+	delete pushButton_clear;
+}
+
+void StringInput::OnOkClicked()
+{
+	*ss = lineEdit->text().toStdString();
+	this->close();
+}
+
+void StringInput::OnCloseClicked()
+{
+	this->close();
 }

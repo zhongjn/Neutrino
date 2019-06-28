@@ -1,7 +1,6 @@
 #include "UI/inbox.h"
 #include "ui_inbox.h"
 
-#include <iostream>///
 
 inbox::inbox(QWidget *parent) :
     QWidget(parent),
@@ -9,7 +8,16 @@ inbox::inbox(QWidget *parent) :
 {
     ui->setupUi(this);
 	ptLoop = new QEventLoop(this);
+	block = false;
 	mgr.FetchMails();
+
+	QTreeWidgetItem *item = FindItemFolder("Folder");
+	vector<Folder> folders = mgr.ListFolders();
+	for (auto& folder : folders) {		
+		QTreeWidgetItem *i = new QTreeWidgetItem(item, QStringList(QString::fromStdString(folder.GetName())));
+		ui->comboBox_move->addItem(folder.GetName().c_str());
+	}
+
 	connect(ui->pushButton_write, SIGNAL(clicked()), this, SLOT(OnWriteClicked()));
 	connect(ui->pushButton_quit, SIGNAL(clicked()), this, SLOT(OnReturnClicked()));
 	connect(ui->pushButton_logout, SIGNAL(clicked()), this, SLOT(OnReturnClicked()));
@@ -18,8 +26,8 @@ inbox::inbox(QWidget *parent) :
 	connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(OnChooseAll()));
 	connect(ui->pushButton_9, SIGNAL(clicked()), this, SLOT(OnReadAll()));
 	connect(ui->pushButton_7, SIGNAL(clicked()), this, SLOT(OnDeleteClicked()));
-	connect(ui->comboBox_2, SIGNAL(currentIndexChanged(QString)), this, SLOT(OnMark()));
-	connect(ui->comboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(OnMove()));
+	connect(ui->comboBox_mark, SIGNAL(currentIndexChanged(QString)), this, SLOT(OnMark()));
+	connect(ui->comboBox_move, SIGNAL(currentIndexChanged(QString)), this, SLOT(OnMove()));
 	connect(ui->pushButton_new, SIGNAL(clicked()), this, SLOT(FolderNew()));
 	connect(ui->pushButton_rename, SIGNAL(clicked()), this, SLOT(FolderRename()));
 	connect(ui->pushButton_remove, SIGNAL(clicked()), this, SLOT(FolderRemove()));
@@ -60,18 +68,22 @@ void inbox::OnWriteClicked()
 
 void inbox::OnReturnClicked()
 {
-	if (sender() == ui->pushButton_logout) {
-		closeResult = false;
+	if (block == false) {
+		if (sender() == ui->pushButton_logout) {
+			closeResult = false;
+		}
+		else {
+			closeResult = true;
+		}
+		ptLoop->quit();
 	}
-	else {
-		closeResult = true;
-	}
-	ptLoop->quit();
 }
 
 void inbox::OnTreeChosen()
 {
-	MailSearch(false);
+	if (block == false) {
+		MailSearch(false);
+	}
 }
 
 void inbox::OnSearchEnter()
@@ -103,9 +115,6 @@ void inbox::MailSearch(bool flag)
     if (flag) con.match_full = ui->lineEdit->text().toStdString();
 
 	int count = -1;
-	//int x0 = ui->scrollArea_2->geometry().x();
-	//int y0 = ui->scrollArea_2->geometry().y();//TODO: zoom
-	//mgr.FetchMails();
 	if (flag == false) {
 		mails = mgr.ListMails(sour);
 	}
@@ -119,7 +128,7 @@ void inbox::MailSearch(bool flag)
 		MailChoose* mc = new MailChoose(&mail, &cid, ui->scrollArea_mail);
 		MailFlag* mf = new MailFlag(&mail, ui->scrollArea_mail);
 		MailRead* mr = new MailRead(&mail, ui->scrollArea_mail);
-		MailMore* mm = new MailMore(&mail, ui->scrollArea_mail);
+		MailMore* mm = new MailMore(&mail, &block, [this] { this->OnTreeChosen(); }, ui->scrollArea_mail);
 		vc.push_back(mc);
 		vf.push_back(mf);
 		vr.push_back(mr);
@@ -149,7 +158,7 @@ ListSource inbox::GetTreeItem()
 		source.type = ListSource::Type::All;
 		return source;
 	}
-	if (item->text(0).toStdString() == "ALL") {
+	if (item->text(0).toStdString() == "All") {
 		source.type = ListSource::Type::All;
 	}
 	else if (item->text(0).toStdString() == "Read") {
@@ -169,12 +178,16 @@ ListSource inbox::GetTreeItem()
 	}
 	else if (item->text(0).toStdString() == "Folder") {
 		source.type = ListSource::Type::Folder;
-		source.folderId = -1;
+	}
+	else if (item->parent() != NULL) {
+		if (item->parent()->text(0).toStdString() == "Folder") {
+			source.type = ListSource::Type::Folder;
+			source.folderId = FindFolderId(item->text(0).toStdString());
+		}
 	}
 	else {
 		source.type = ListSource::Type::All;
 	}
-
 	return source;
 }
 
@@ -230,48 +243,113 @@ void inbox::OnDeleteClicked()
 
 void inbox::OnMark()
 {
-	if (ui->comboBox_2->currentIndex() == 1) {
+	if (ui->comboBox_mark->currentIndex() == 1) {
 		for (vector<int>::iterator iter = cid.begin(); iter != cid.end(); iter++) {
 			mgr.SetMailRead(*iter, true);
 		}
 	}
-	else if (ui->comboBox_2->currentIndex() == 2) {
+	else if (ui->comboBox_mark->currentIndex() == 2) {
 		for (vector<int>::iterator iter = cid.begin(); iter != cid.end(); iter++) {
 			mgr.SetMailRead(*iter, false);
 		}
 	}
-	else if (ui->comboBox_2->currentIndex() == 3) {
+	else if (ui->comboBox_mark->currentIndex() == 3) {
 		for (vector<int>::iterator iter = cid.begin(); iter != cid.end(); iter++) {
 			mgr.SetMailFlag(*iter, true);
 		}
 	}
-	else if (ui->comboBox_2->currentIndex() == 4) {
+	else if (ui->comboBox_mark->currentIndex() == 4) {
 		for (vector<int>::iterator iter = cid.begin(); iter != cid.end(); iter++) {
 			mgr.SetMailFlag(*iter, false);
 		}
 	}
-	ui->comboBox_2->setCurrentIndex(0);
+	ui->comboBox_mark->setCurrentIndex(0);
 	MailSearch(false);
 }
 
 void inbox::OnMove()
 {
-	;
+	if (ui->comboBox_move->currentIndex() == 0) {
+		return;
+	}
+	else if (ui->comboBox_move->currentIndex() == 1) {
+		for (vector<int>::iterator i = cid.begin(); i != cid.end(); i++) {
+			mgr.SetMailFolder(*i, NULL);
+		}
+	}
+	else if (ui->comboBox_move->currentIndex() == 2) {
+		for (vector<int>::iterator i = cid.begin(); i != cid.end(); i++) {
+			mgr.SetMailSpam(*i, true);
+		}
+	}
+	else if (ui->comboBox_move->currentIndex() == 3) {
+		int fid = FolderNew();
+		for (vector<int>::iterator i = cid.begin(); i != cid.end(); i++) {
+			mgr.SetMailFolder(*i, fid);
+		}
+	}
+	else {
+		int fid = FindFolderId(ui->comboBox_move->currentText().toStdString());
+		for (vector<int>::iterator i = cid.begin(); i != cid.end(); i++) {
+			mgr.SetMailSpam(*i, false);
+			mgr.SetMailFolder(*i, fid);
+		}
+	}
+	ui->comboBox_move->setCurrentIndex(0);
+	MailSearch(false);
 }
 
-void inbox::FolderNew()
-{	
-	;
+int inbox::FolderNew()
+{
+	QTreeWidgetItem *item = FindItemFolder("Folder");
+	string s;
+	StringInput in(&s);
+	in.exec();
+	//cout << s << endl;
+	mgr.AddFolder(s);
+	QTreeWidgetItem *folder = new QTreeWidgetItem(item, QStringList(QString::fromStdString(s)));
+	ui->comboBox_move->addItem(s.c_str());
+	return FindFolderId(s);
 }
 
 void inbox::FolderRename()
 {
-	;
+	QTreeWidgetItem *item = ui->treeWidget->currentItem();
+	if (item == NULL) {
+		QMessageBox::warning(this, "WARNING", "Please choose a folder you want to rename");
+	}
+	else if (item->parent() == NULL) {
+		QMessageBox::warning(this, "WARNING", "You can't rename this folder");
+	}
+	else if (item->parent()->text(0).toStdString() == "Folder") {
+		ui->comboBox_move->removeItem(FindFolderIndex(item->text(0).toStdString()));
+		
+		int fid = FindFolderId(item->text(0).toStdString());
+		string s;
+		StringInput in(&s);
+		in.exec();
+		mgr.RenameFolder(fid, s);
+		item->setText(0, QString::fromStdString(s));
+		ui->comboBox_move->addItem(s.c_str());
+	}
+
 }
 
 void inbox::FolderRemove()
 {
-
+	QTreeWidgetItem *item = ui->treeWidget->currentItem();
+	if (item == NULL) {
+		QMessageBox::warning(this, "WARNING", "Please choose a folder you want to rename");
+	}
+	else if (item->parent() == NULL) {
+		QMessageBox::warning(this, "WARNING", "You can't rename this folder");
+	}
+	else if (item->parent()->text(0).toStdString() == "Folder") {
+		int fid = FindFolderId(item->text(0).toStdString());
+		mgr.DeleteFolder(fid);
+		ui->comboBox_move->removeItem(FindFolderIndex(item->text(0).toStdString()));
+		delete item->parent()->takeChild(ui->treeWidget->currentIndex().row());
+	}
 }
 
 void inbox::ScroolWidget(int value)
@@ -280,7 +358,7 @@ void inbox::ScroolWidget(int value)
 	ui->scrollArea_mail->move(0, MAILHEIGHT - (ui->scrollArea_mail->height() - 300) * p);
 }
 
-void inbox::wheelEvent(QWheelEvent *event) {
+void inbox::WheelEvent(QWheelEvent *event) {
 	int p = event->angleDelta().y();    
 	if (p < 0) {
 		if (ui->verticalScrollBar->value() + WHEELUNIT <= 100) {
@@ -303,4 +381,37 @@ void inbox::wheelEvent(QWheelEvent *event) {
 		}
 	}
 }
-	
+
+int inbox::FindFolderId(string fname)
+{
+	vector<Folder> folders = mgr.ListFolders();
+	for (auto& folder : folders) {
+		if (folder.GetName() == fname) {
+			return folder.GetId();
+		}
+	}
+	return -1;
+}
+
+int inbox::FindFolderIndex(string fname)
+{
+	for (int i = 3; i < ui->comboBox_move->count(); i++) {
+		if (ui->comboBox_move->itemText(i) == QString::fromStdString(fname)) {
+			return i;
+		}
+		
+	}
+	return -1;
+}
+
+QTreeWidgetItem *inbox::FindItemFolder(string Folder)
+{
+	QTreeWidgetItemIterator it(ui->treeWidget);
+	while (*it) {
+		if ((*it)->text(0) == QString::fromStdString(Folder)) {
+			return (*it);
+		}
+		it++;
+	}
+	return NULL;
+}
