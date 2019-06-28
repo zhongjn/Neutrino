@@ -12,45 +12,14 @@ find_package(Qt5Widgets CONFIG REQUIRED)
 find_package(Qt5Core CONFIG REQUIRED)
 find_package(Qt5Gui CONFIG REQUIRED)
 
-set(UI 
-  UI/Common.cpp
-  UI/inbox.cpp
-  UI/inbox.ui
-  UI/inbox_detail.cpp
-  UI/inbox_detail.ui
-  UI/Mailitem.cpp
-  UI/mainwindow.cpp
-  UI/mainwindow.ui
-  UI/send.cpp
-  UI/send.ui
-)
+aux_source_directory(. src)
+aux_source_directory(./UI src_ui)
 
 # Add source to this project's executable.
 add_executable(
   Neutrino 
-  "CredentialInfo.cpp"
-  "CredentialInfo.h"
-  "DB.h"
-  "Folder.cpp"
-  "Folder.h"
-  "IPEndPoint.cpp"
-  "IPEndPoint.h"
-  "Mail.cpp"
-  "Mail.h"
-  "MailAddress.cpp"
-  "MailAddress.h"
-  "MailManager.cpp"
-  "MailManager.h"
-  "MailParser.cpp"
-  "MailParser.h"
-  "Main.cpp"
-  "Nullable.h"
-  "Property.h"
-  "SpamFilter.cpp"
-  "SpamFilter.h"
-  "Utility.cpp"
-  "Utility.h"
-  ${UI}
+  ${src}
+  ${src_ui}
 )
 
 target_link_libraries(
