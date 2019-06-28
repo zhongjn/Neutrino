@@ -422,5 +422,5 @@ QTreeWidgetItem *inbox::FindItemFolder(string Folder)
 
 void inbox::OnFetchClicked()
 {
-	mgr.FetchMails();
+	mgr->FetchMails();
 }

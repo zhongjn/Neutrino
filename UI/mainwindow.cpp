@@ -39,7 +39,7 @@ void MainWindow::OnSigninClicked()
 	}
 	*/
 	madr = MailAddress("610223674@qq.com");
-	mgr.Login(CredentialInfo(madr, "ycagpzuevtubbbee",
+	mgr->Login(CredentialInfo(madr, "ycagpzuevtubbbee",
 		ServerEndPoint("smtp.qq.com", 465), ServerEndPoint("pop.qq.com", 995)), ui->checkBox->isChecked());
 	inbox w;
 	this->hide();
