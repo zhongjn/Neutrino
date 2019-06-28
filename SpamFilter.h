@@ -13,25 +13,25 @@ using namespace std;
 // Naive Bayes Classifier
 class SpamFilter {
 public:
-  typedef unsigned int uint;
+    typedef unsigned int uint;
 
-  bool Predict(const Mail &mail); // interface
-  SpamFilter();
+    bool Predict(const string& text); // interface
+    SpamFilter();
 
 private:
-  vector<double> attrs; // attributes
+    vector<double> attrs; // attributes
 
-  double logpHam; // log priors
-  double logpSpam;
+    double logpHam; // log priors
+    double logpSpam;
 
-  vector<double> loglHam; // log likelihood
-  vector<double> loglSpam;
+    vector<double> loglHam; // log likelihood
+    vector<double> loglSpam;
 
-  fstream file;
+    fstream file;
 
-  void Train();
-  void Test();
-  bool Predict();
-  void StoreParams();
-  void LoadParams();
+    void Train();
+    void Test();
+    bool Predict();
+    void StoreParams();
+    void LoadParams();
 };

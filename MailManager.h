@@ -6,6 +6,7 @@
 #include "Folder.h"
 #include "Utility.h"
 #include "CryptoProvider.h"
+#include "SpamFilter.h"
 #include "ThirdParty/sqlite3/sqlite3.h"
 #include <vector>
 
@@ -48,6 +49,8 @@ class MailManager {
 private:
     sqlite3* db = nullptr;
     Nullable<CredentialInfo> cred = Null();
+    SpamFilter filter;
+
     CryptoProvider* crypt_cred = new Win32CryptoProvider();
     CryptoProvider* crypt_mail = new AES256CryptoProvider("asd12@!#*asd");
 
@@ -70,7 +73,7 @@ public:
     vector<Mail> ListMails(const ListSource& source = ListSource(), const ListCondition& cond = ListCondition()) const; // 列出所有本地的邮件（给UI用) TODO: 筛选、检索
 
     // 发送一封邮件
-    void SendMail(const Mail& mail) const;
+    void SendMail(const Mail& mail, Nullable<string> attachment_path = Null()) const;
 
     // 删除一封邮件，根据id
     void DeleteMail(int id);

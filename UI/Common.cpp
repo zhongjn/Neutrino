@@ -1,3 +1,3 @@
 #include "UI/Common.h"
-MailManager mgr;
+MailManager* mgr;
 MailAddress madr;

@@ -9,10 +9,10 @@ inbox::inbox(QWidget *parent) :
     ui->setupUi(this);
 	ptLoop = new QEventLoop(this);
 	block = false;
-	mgr.FetchMails();
+	mgr->FetchMails();
 
 	QTreeWidgetItem *item = FindItemFolder("Folder");
-	vector<Folder> folders = mgr.ListFolders();
+	vector<Folder> folders = mgr->ListFolders();
 	for (auto& folder : folders) {		
 		QTreeWidgetItem *i = new QTreeWidgetItem(item, QStringList(QString::fromStdString(folder.GetName())));
 		ui->comboBox_move->addItem(folder.GetName().c_str());
@@ -116,10 +116,10 @@ void inbox::MailSearch(bool flag)
 
 	int count = -1;
 	if (flag == false) {
-		mails = mgr.ListMails(sour);
+		mails = mgr->ListMails(sour);
 	}
 	else {
-		mails = mgr.ListMails(sour, con);
+		mails = mgr->ListMails(sour, con);
 	}
 	for (auto& mail : mails) {
 		//mail
@@ -216,7 +216,7 @@ void inbox::OnChooseAll()
 void inbox::OnReadAll()
 {
 	for (vector<Mail>::iterator iter = mails.begin(); iter != mails.end(); iter++) {
-		mgr.SetMailRead(iter->GetId(), true);
+		mgr->SetMailRead(iter->GetId(), true);
 	}
 	MailSearch(false);
 }
@@ -232,10 +232,10 @@ void inbox::OnDeleteClicked()
 			}
 		}
 		if (spam == false) {
-			mgr.SetMailSpam(*i, true);
+			mgr->SetMailSpam(*i, true);
 		}
 		else {
-			mgr.DeleteMail(*i);
+			mgr->DeleteMail(*i);
 		}
 	}
 	MailSearch(false);
@@ -245,22 +245,22 @@ void inbox::OnMark()
 {
 	if (ui->comboBox_mark->currentIndex() == 1) {
 		for (vector<int>::iterator iter = cid.begin(); iter != cid.end(); iter++) {
-			mgr.SetMailRead(*iter, true);
+			mgr->SetMailRead(*iter, true);
 		}
 	}
 	else if (ui->comboBox_mark->currentIndex() == 2) {
 		for (vector<int>::iterator iter = cid.begin(); iter != cid.end(); iter++) {
-			mgr.SetMailRead(*iter, false);
+			mgr->SetMailRead(*iter, false);
 		}
 	}
 	else if (ui->comboBox_mark->currentIndex() == 3) {
 		for (vector<int>::iterator iter = cid.begin(); iter != cid.end(); iter++) {
-			mgr.SetMailFlag(*iter, true);
+			mgr->SetMailFlag(*iter, true);
 		}
 	}
 	else if (ui->comboBox_mark->currentIndex() == 4) {
 		for (vector<int>::iterator iter = cid.begin(); iter != cid.end(); iter++) {
-			mgr.SetMailFlag(*iter, false);
+			mgr->SetMailFlag(*iter, false);
 		}
 	}
 	ui->comboBox_mark->setCurrentIndex(0);
@@ -274,25 +274,25 @@ void inbox::OnMove()
 	}
 	else if (ui->comboBox_move->currentIndex() == 1) {
 		for (vector<int>::iterator i = cid.begin(); i != cid.end(); i++) {
-			mgr.SetMailFolder(*i, NULL);
+			mgr->SetMailFolder(*i, NULL);
 		}
 	}
 	else if (ui->comboBox_move->currentIndex() == 2) {
 		for (vector<int>::iterator i = cid.begin(); i != cid.end(); i++) {
-			mgr.SetMailSpam(*i, true);
+			mgr->SetMailSpam(*i, true);
 		}
 	}
 	else if (ui->comboBox_move->currentIndex() == 3) {
 		int fid = FolderNew();
 		for (vector<int>::iterator i = cid.begin(); i != cid.end(); i++) {
-			mgr.SetMailFolder(*i, fid);
+			mgr->SetMailFolder(*i, fid);
 		}
 	}
 	else {
 		int fid = FindFolderId(ui->comboBox_move->currentText().toStdString());
 		for (vector<int>::iterator i = cid.begin(); i != cid.end(); i++) {
-			mgr.SetMailSpam(*i, false);
-			mgr.SetMailFolder(*i, fid);
+			mgr->SetMailSpam(*i, false);
+			mgr->SetMailFolder(*i, fid);
 		}
 	}
 	ui->comboBox_move->setCurrentIndex(0);
@@ -306,7 +306,7 @@ int inbox::FolderNew()
 	StringInput in(&s);
 	in.exec();
 	//cout << s << endl;
-	mgr.AddFolder(s);
+	mgr->AddFolder(s);
 	QTreeWidgetItem *folder = new QTreeWidgetItem(item, QStringList(QString::fromStdString(s)));
 	ui->comboBox_move->addItem(s.c_str());
 	return FindFolderId(s);
@@ -328,7 +328,7 @@ void inbox::FolderRename()
 		string s;
 		StringInput in(&s);
 		in.exec();
-		mgr.RenameFolder(fid, s);
+		mgr->RenameFolder(fid, s);
 		item->setText(0, QString::fromStdString(s));
 		ui->comboBox_move->addItem(s.c_str());
 	}
@@ -346,7 +346,7 @@ void inbox::FolderRemove()
 	}
 	else if (item->parent()->text(0).toStdString() == "Folder") {
 		int fid = FindFolderId(item->text(0).toStdString());
-		mgr.DeleteFolder(fid);
+		mgr->DeleteFolder(fid);
 		ui->comboBox_move->removeItem(FindFolderIndex(item->text(0).toStdString()));
 		delete item->parent()->takeChild(ui->treeWidget->currentIndex().row());
 	}
@@ -384,7 +384,7 @@ void inbox::WheelEvent(QWheelEvent *event) {
 
 int inbox::FindFolderId(string fname)
 {
-	vector<Folder> folders = mgr.ListFolders();
+	vector<Folder> folders = mgr->ListFolders();
 	for (auto& folder : folders) {
 		if (folder.GetName() == fname) {
 			return folder.GetId();

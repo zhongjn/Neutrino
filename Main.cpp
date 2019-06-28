@@ -1,19 +1,15 @@
-#include "UI/mainwindow.h"
-#include "UI/send.h"
-#include "UI/inbox.h"
-#include <QApplication>
-#include <QTextCodec>
 #include "CryptoProvider.h"
 #include <iostream>
+#include "UI/UIMain.h"
 
-int RunQt(int argc, char* argv[]) {
-
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-
-    return a.exec();
-}
+//int RunQt(int argc, char* argv[]) {
+//
+//    QApplication a(argc, argv);
+//    MainWindow w;
+//    w.show();
+//
+//    return a.exec();
+//}
 
 int main(int argc, char *argv[])
 {
@@ -30,8 +26,10 @@ int main(int argc, char *argv[])
     //{
     //    MailManager mgr;
     //    bool b = mgr.IsLoginNeeded();
-    //    mgr.Login(CredentialInfo(MailAddress("610223674@qq.com"), "ycagpzuevtubbbee",
+    //    if (b) mgr.Login(CredentialInfo(MailAddress("610223674@qq.com"), "ycagpzuevtubbbee",
     //        ServerEndPoint("smtp.qq.com", 465), ServerEndPoint("pop.qq.com", 995)), true);
+
+    //    mgr.FetchMails();
     //}
 
     //{
@@ -41,7 +39,6 @@ int main(int argc, char *argv[])
     //}
 
 
-	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     return RunQt(argc, argv);
 
 }

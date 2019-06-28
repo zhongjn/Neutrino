@@ -40,17 +40,21 @@ MailManager::MailManager() {
         );
     )";
 
-    string sqlCreateMails =
-        "CREATE TABLE IF NOT EXISTS mails ("
-        "   id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "   subject TEXT,"
-        "   content TEXT,"
-        "   time INTEGER,"
-        "   is_spam integer DEFAULT 0,"
-        "   folder_id INTEGER DEFAULT -1,"
-        "   read integer DEFAULT 0,"
-        "   flag integer DEFAULT 0"
-        ");";
+    string sqlCreateMails = R"(
+        CREATE TABLE IF NOT EXISTS mails (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, 
+            subject TEXT,
+            content TEXT,
+            time INTEGER,
+            is_spam integer DEFAULT 0,
+            folder_id INTEGER DEFAULT -1,
+            read integer DEFAULT 0,
+            flag integer DEFAULT 0,
+            sender TEXT,
+            receiver TEXT,
+            attachment_name TEXT
+        );
+    )";
 
     string sqlCreateFolders =
         "CREATE TABLE IF NOT EXISTS folders ("
@@ -111,7 +115,6 @@ bool MailManager::Login(const CredentialInfo& cred, bool rememberMe) {
 
 void MailManager::FetchMails() {
     if (cred) {
-        // TODO: 先拉取邮件头，如果不在数据库里，那么拉取整个
 
         auto& pop3 = cred->GetPop3();
         pop3s conn(pop3.GetIPAddress(), pop3.GetPort());
@@ -138,12 +141,30 @@ void MailManager::FetchMails() {
                 message msg;
                 conn.fetch(i, msg, false);
 
-                // TODO: 判断垃圾邮件
 
-                stringstream sqlInsert;
-                sqlInsert << "INSERT INTO mails (subject, content, time) VALUES (" << quote(msg.subject()) << "," << quote(msg.content()) << "," << time << ");";
+                string text = msg.subject() + " " + msg.content();
+                int spam = filter.Predict(text);
+
+                string attName;
+                int atts = msg.attachments_size();
+                if (atts > 0) {
+                    {
+                        ofstream ofs("attachments/TEMP", std::ios::binary);
+                        msg.attachment(1, ofs, attName); 
+                    }
+                    rename("attachments/TEMP", ("attachments/" + attName).c_str());
+                }
+
+                string sqlInsert = string_format(
+                    "INSERT INTO mails (subject, content, time, is_spam, attachment_name) VALUES (%s, %s, %d, %d, %s)",
+                    quote(msg.subject()).c_str(),
+                    quote(msg.content()).c_str(),
+                    time,
+                    spam,
+                    quote(attName).c_str()
+                );
                 char* errmsg;
-                sqlite3_exec(db, sqlInsert.str().c_str(), 0, 0, &errmsg);
+                sqlite3_exec(db, sqlInsert.c_str(), 0, 0, &errmsg);
             }
             else {
                 break;
@@ -157,7 +178,11 @@ vector<Mail> MailManager::ListMails(const ListSource& source, const ListConditio
     // TODO: 收件人、发件人
     vector<Mail> lst;
     stringstream ss;
-    ss << "SELECT id, subject, content, time, read, flag, is_spam FROM mails";
+    ss << R"(
+        SELECT 
+            id, subject, content, time, read, 
+            flag, is_spam, sender, receiver, attachment_name 
+        FROM mails)";
     switch (source.type)
     {
         case ListSource::Type::All:
@@ -189,11 +214,15 @@ vector<Mail> MailManager::ListMails(const ListSource& source, const ListConditio
 
     DB_CALLBACK(callback) {
         DB_CALLBACK_PARAM(vector<Mail>);
-        Mail m(values[1], values[2], MailAddress("from@example.com"), MailAddress("to@example.com"));
+        Mail m(values[1], values[2], MailAddress(values[7]), MailAddress(values[8]));
         m.SetId(atoi(values[0]));
         m.SetRead(atoi(values[4]));
         m.SetFlag(atoi(values[5]));
         m.SetSpam(atoi(values[6]));
+        string attName = values[9];
+        if (attName.length() > 0) {
+            m.SetAttachmentName(attName);
+        }
         param->push_back(move(m));
         return 0;
     };
@@ -201,7 +230,7 @@ vector<Mail> MailManager::ListMails(const ListSource& source, const ListConditio
     return lst;
 }
 
-void MailManager::SendMail(const Mail& mail) const {
+void MailManager::SendMail(const Mail& mail, Nullable<string> attachment_path) const {
     if (cred) {
         message msg;
         msg.from(mail_address("SENDER", mail.GetSender().GetAddress()));
@@ -209,6 +238,24 @@ void MailManager::SendMail(const Mail& mail) const {
             mail_address("RECEIVER", mail.GetReceiver().GetAddress()));
         msg.subject(mail.GetSubject());
         msg.content(mail.GetContent());
+
+        if (attachment_path) {
+            string att = attachment_path.Value();
+            try {
+                ifstream ifs(att);
+                const size_t last_slash_idx = att.find_last_of("\\/");
+                string name = att;
+                if (std::string::npos != last_slash_idx)
+                {
+                    name.erase(0, last_slash_idx + 1);
+                }
+                msg.attach(ifs, name, message::media_type_t::NONE, "att");
+            }
+            catch (exception& ex) {
+                cout << ex.what() << endl;
+            }
+        }
+
         auto& smtp = cred->GetSmtp();
         smtps conn(smtp.GetIPAddress(), smtp.GetPort());
         conn.authenticate(cred->GetUsername(), cred->GetPassword(),

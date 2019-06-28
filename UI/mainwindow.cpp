@@ -24,7 +24,7 @@ void MainWindow::OnSigninClicked()
 	QString password = ui->lineEdit_2->text();
 	//madr = MailAddress(account.toStdString());
 	madr = MailAddress("610223674@qq.com");
-	mgr.SetCredential(CredentialInfo(madr, "ycagpzuevtubbbee",
+	mgr->SetCredential(CredentialInfo(madr, "ycagpzuevtubbbee",
 		ServerEndPoint("smtp.qq.com", 465), ServerEndPoint("pop.qq.com", 995)));
 	//mgr.SetCredential(CredentialInfo(madr, password.toStdString(),
 	//	ServerEndPoint("smtp.qq.com", 465), ServerEndPoint("pop.qq.com", 995)));

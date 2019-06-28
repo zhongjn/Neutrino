@@ -47,10 +47,10 @@ void inbox_detail::OnReplyClicked()
 void inbox_detail::OnDeleteClicked()
 {
 	if (m->GetSpam() == false) {
-		mgr.SetMailSpam(m->GetId(), true);
+		mgr->SetMailSpam(m->GetId(), true);
 	}
 	else {
-		mgr.DeleteMail(m->GetId());
+		mgr->DeleteMail(m->GetId());
 	}
 	OnBackClicked();
 }
@@ -58,16 +58,16 @@ void inbox_detail::OnDeleteClicked()
 void inbox_detail::OnMarkClicked()
 {
 	if (ui->comboBox_mark->currentIndex() == 1) {
-		mgr.SetMailRead(m->GetId(), true);
+		mgr->SetMailRead(m->GetId(), true);
 	}
 	else if (ui->comboBox_mark->currentIndex() == 2) {
-		mgr.SetMailRead(m->GetId(), false);
+		mgr->SetMailRead(m->GetId(), false);
 	}
 	else if (ui->comboBox_mark->currentIndex() == 3) {
-		mgr.SetMailFlag(m->GetId(), true);
+		mgr->SetMailFlag(m->GetId(), true);
 	}
 	else if (ui->comboBox_mark->currentIndex() == 4) {
-		mgr.SetMailFlag(m->GetId(), false);
+		mgr->SetMailFlag(m->GetId(), false);
 	}
 	ui->comboBox_mark->setCurrentIndex(0);
 }

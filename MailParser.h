@@ -14,7 +14,7 @@ using namespace std;
 // static method used to parse mails
 class MailParser {
 public:
-  typedef unsigned int uint;
+    typedef unsigned int uint;
 
-  static vector<double> Parse(const Mail &mail);
+    static vector<double> Parse(const string& text);
 };

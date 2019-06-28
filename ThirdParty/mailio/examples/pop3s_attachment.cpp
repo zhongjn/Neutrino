@@ -49,7 +49,7 @@ int main()
         conn.authenticate("mailio@mailserver.com", "mailiopass", pop3s::auth_method_t::LOGIN);
         // fetch the first message from mailbox
         conn.fetch(1, msg);
-        
+
         ofstream ofs1("alepho.png", std::ios::binary);
         string att1;
         msg.attachment(1, ofs1, att1);
