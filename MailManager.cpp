@@ -7,8 +7,39 @@
 
 using namespace mailio;
 
+bool MailManager::VerifyCredential(const CredentialInfo& cred) {
+    try {
+        auto& pop3 = cred.GetPop3();
+        pop3s conn_pop3(pop3.GetIPAddress(), pop3.GetPort());
+        conn_pop3.authenticate(cred.GetUsername(), cred.GetPassword(),
+            pop3s::auth_method_t::LOGIN);
+
+        auto& smtp = cred.GetSmtp();
+        smtps conn_smtp(smtp.GetIPAddress(), smtp.GetPort());
+        conn_smtp.authenticate(cred.GetUsername(), cred.GetPassword(),
+            smtps::auth_method_t::LOGIN);
+    }
+    catch (exception & ex) {
+        cout << ex.what() << endl;
+        return false;
+    }
+    return true;
+}
+
 MailManager::MailManager() {
     sqlite3_open("data.db", &db);
+
+    string sqlCreateCredential = R"(
+        CREATE TABLE IF NOT EXISTS cred (
+            username text,
+            password TEXT,
+            smtp_addr TEXT,
+            smtp_port integer,
+            pop3_addr TEXT,
+            pop3_port integer
+        );
+    )";
+
     string sqlCreateMails =
         "CREATE TABLE IF NOT EXISTS mails ("
         "   id INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -27,38 +58,64 @@ MailManager::MailManager() {
         "   name TEXT"
         ");";
 
+    sqlite3_exec(db, sqlCreateCredential.c_str(), nullptr, nullptr, nullptr);
     sqlite3_exec(db, sqlCreateMails.c_str(), nullptr, nullptr, nullptr);
     sqlite3_exec(db, sqlCreateFolders.c_str(), nullptr, nullptr, nullptr);
 
+    Nullable<CredentialInfo> saved = LoadSavedCredential();
+    if (saved) Login(saved.Value(), true);
+}
+
+Nullable<CredentialInfo> MailManager::LoadSavedCredential() {
+    string sql = "SELECT username, password, smtp_addr, smtp_port, pop3_addr, pop3_port FROM cred";
+    struct Param {
+        Nullable<CredentialInfo> cred;
+        CryptoProvider* crypt;
+    } param{ Null(), this->crypt_cred };
+
+    DB_CALLBACK(callback) {
+        DB_CALLBACK_PARAM(Param);
+        param->cred = CredentialInfo(MailAddress(values[0]), param->crypt->Decrypt(values[1]), ServerEndPoint(values[2], atoi(values[3])), ServerEndPoint(values[4], atoi(values[5])));
+        return 0;
+    };
+    sqlite3_exec(db, sql.c_str(), callback, &param, 0);
+    return param.cred;
 }
 
 MailManager::~MailManager() { sqlite3_close(db); }
 
-static void replace_str(string& str, const string& from, const string& to) {
-    if (from.empty())
-        return;
-    size_t start_pos = 0;
-    while ((start_pos = str.find(from, start_pos)) != string::npos) {
-        str.replace(start_pos, from.length(), to);
-        start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
+bool MailManager::Login(const CredentialInfo& cred, bool rememberMe) {
+    if (IsLoginNeeded()) {
+        if (VerifyCredential(cred)) {
+            this->cred = cred;
+            string sqldel = "DELETE FROM cred;";
+            sqlite3_exec(db, sqldel.c_str(), 0, 0, 0);
+            if (rememberMe) {
+                char* err = nullptr;
+                string sql = string_format(
+                    "INSERT INTO cred (username, password, smtp_addr, smtp_port, pop3_addr, pop3_port) VALUES (%s, %s, %s, %d, %s, %d);",
+                    quote(cred.GetUsername()).c_str(),
+                    quote(crypt_cred->Encrypt(cred.GetPassword())).c_str(),
+                    quote(cred.GetSmtp().GetIPAddress()).c_str(),
+                    cred.GetSmtp().GetPort(),
+                    quote(cred.GetPop3().GetIPAddress()).c_str(),
+                    cred.GetPop3().GetPort());
+                sqlite3_exec(db, sql.c_str(), 0, 0, &err);
+            }
+            return true;
+        }
+        return false;
     }
-}
-
-static string quote(const string& t) {
-    stringstream ss;
-    string tt = t;
-    replace_str(tt, "\"", "\"\"");
-    ss << "\"" << tt << "\"";
-    return ss.str();
+    return true;
 }
 
 void MailManager::FetchMails() {
-    if (m_Credential) {
+    if (cred) {
         // TODO: 先拉取邮件头，如果不在数据库里，那么拉取整个
 
-        auto& pop3 = m_Credential->GetPop3();
+        auto& pop3 = cred->GetPop3();
         pop3s conn(pop3.GetIPAddress(), pop3.GetPort());
-        conn.authenticate(m_Credential->GetUsername(), m_Credential->GetPassword(),
+        conn.authenticate(cred->GetUsername(), cred->GetPassword(),
             pop3s::auth_method_t::LOGIN);
 
         auto mails = conn.list(0); // (序号, id）
@@ -70,7 +127,7 @@ void MailManager::FetchMails() {
             *param = values[0] ? atoi(values[0]) : 0;
             return 0;
         };
-        sqlite3_exec(db, sqlMaxTime.c_str(), callback, &maxTime, nullptr);
+        sqlite3_exec(db, sqlMaxTime.c_str(), callback, &maxTime, 0);
 
         for (int i = mails.size(); i >= 1; i--) {
             message msgHeader;
@@ -86,7 +143,7 @@ void MailManager::FetchMails() {
                 stringstream sqlInsert;
                 sqlInsert << "INSERT INTO mails (subject, content, time) VALUES (" << quote(msg.subject()) << "," << quote(msg.content()) << "," << time << ");";
                 char* errmsg;
-                sqlite3_exec(db, sqlInsert.str().c_str(), nullptr, nullptr, &errmsg);
+                sqlite3_exec(db, sqlInsert.str().c_str(), 0, 0, &errmsg);
             }
             else {
                 break;
@@ -140,21 +197,21 @@ vector<Mail> MailManager::ListMails(const ListSource& source, const ListConditio
         param->push_back(move(m));
         return 0;
     };
-    sqlite3_exec(db, ss.str().c_str(), callback, &lst, nullptr);
+    sqlite3_exec(db, ss.str().c_str(), callback, &lst, 0);
     return lst;
 }
 
 void MailManager::SendMail(const Mail& mail) const {
-    if (m_Credential) {
+    if (cred) {
         message msg;
         msg.from(mail_address("SENDER", mail.GetSender().GetAddress()));
         msg.add_recipient(
             mail_address("RECEIVER", mail.GetReceiver().GetAddress()));
         msg.subject(mail.GetSubject());
         msg.content(mail.GetContent());
-        auto& smtp = m_Credential->GetSmtp();
+        auto& smtp = cred->GetSmtp();
         smtps conn(smtp.GetIPAddress(), smtp.GetPort());
-        conn.authenticate(m_Credential->GetUsername(), m_Credential->GetPassword(),
+        conn.authenticate(cred->GetUsername(), cred->GetPassword(),
             smtps::auth_method_t::LOGIN);
         conn.submit(msg);
     }
