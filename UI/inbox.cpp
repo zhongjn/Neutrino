@@ -32,6 +32,7 @@ inbox::inbox(QWidget *parent) :
 	connect(ui->pushButton_rename, SIGNAL(clicked()), this, SLOT(FolderRename()));
 	connect(ui->pushButton_remove, SIGNAL(clicked()), this, SLOT(FolderRemove()));
 	connect(ui->verticalScrollBar, SIGNAL(valueChanged(int)), this, SLOT(ScroolWidget(int)));
+	connect(ui->pushButton_fetch, SIGNAL(clicked()), this, SLOT(OnFetchClicked()));
 }
 
 inbox::~inbox()
@@ -76,6 +77,9 @@ void inbox::OnReturnClicked()
 			closeResult = true;
 		}
 		ptLoop->quit();
+	}
+	else {
+		QMessageBox::warning(this, "WARNING", "Please return to the mailbox first");
 	}
 }
 
@@ -414,4 +418,9 @@ QTreeWidgetItem *inbox::FindItemFolder(string Folder)
 		it++;
 	}
 	return NULL;
+}
+
+void inbox::OnFetchClicked()
+{
+	mgr.FetchMails();
 }

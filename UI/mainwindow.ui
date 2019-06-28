@@ -44,7 +44,7 @@
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
-    <widget class="QLineEdit" name="lineEdit">
+    <widget class="QLineEdit" name="lineEdit_account">
      <property name="geometry">
       <rect>
        <x>110</x>
@@ -80,7 +80,7 @@
       <string>Password</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_2">
+    <widget class="QLineEdit" name="lineEdit_password">
      <property name="geometry">
       <rect>
        <x>110</x>
@@ -105,7 +105,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Use SSL</string>
+      <string>Remember me</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton">
@@ -164,10 +164,10 @@
       <string>close</string>
      </property>
     </widget>
-    <zorder>lineEdit</zorder>
+    <zorder>lineEdit_account</zorder>
     <zorder>label_4</zorder>
     <zorder>label_5</zorder>
-    <zorder>lineEdit_2</zorder>
+    <zorder>lineEdit_password</zorder>
     <zorder>checkBox</zorder>
     <zorder>commandLinkButton</zorder>
     <zorder>pushButton</zorder>
@@ -227,6 +227,72 @@
     </property>
     <property name="text">
      <string>Designed by xxx Group</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>96</y>
+      <width>41</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>smtp:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>140</y>
+      <width>41</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>pop3:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_smtp">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>100</y>
+      <width>151</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_smtp_port">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>100</y>
+      <width>31</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_pop3">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>140</y>
+      <width>151</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit_pop3_port">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>140</y>
+      <width>31</width>
+      <height>20</height>
+     </rect>
     </property>
    </widget>
   </widget>

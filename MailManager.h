@@ -42,7 +42,7 @@ struct ListCondition {
 };
 
 class MailManager {
-    PROPERTY_WRITE(Nullable<CredentialInfo>, Credential)
+    //PROPERTY_WRITE(Nullable<CredentialInfo>, Credential)
         // TODO: ∆‰À˚ Ù–‘£ø
 
 private:
