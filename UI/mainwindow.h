@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QString>
+#include <QMessageBox>
 
 #include "UI/Common.h"
 #include "MailManager.h"

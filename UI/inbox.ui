@@ -484,6 +484,19 @@
     <string>rename</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton_fetch">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>17</y>
+     <width>51</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>refetch</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

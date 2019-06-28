@@ -51,6 +51,7 @@ void MailChoose::OnChooseClicked()
 MailRead::MailRead(Mail *mail, QWidget *parent) : QCheckBox(parent)
 {
 	m = mail;
+	this->setCheckable(false);
 	this->setText("unread");
 	this->setChecked(m->GetRead());
 	connect(this, SIGNAL(clicked()), this, SLOT(OnReadClicked()));
@@ -64,6 +65,7 @@ void MailRead::OnReadClicked()
 MailFlag::MailFlag(Mail *mail, QWidget *parent) : QCheckBox(parent)
 {
 	m = mail;
+	this->setCheckable(false);
 	this->setText("flag");
 	this->setChecked(m->GetFlag());
 	connect(this, SIGNAL(clicked()), this, SLOT(OnFlagClicked()));

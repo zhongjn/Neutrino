@@ -65,6 +65,7 @@ private slots:
 	void FolderRename();
 	void FolderRemove();
 	void ScroolWidget(int);
+	void OnFetchClicked();
 };
 
 #endif // INBOX_H
