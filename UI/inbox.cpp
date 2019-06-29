@@ -9,7 +9,6 @@ inbox::inbox(QWidget *parent) :
     ui->setupUi(this);
 	ptLoop = new QEventLoop(this);
 	block = false;
-	//QMessageBox::warning(this, "WARNING", "Please wait for finishing fetching");
 	mgr->FetchMails();
 
 	QTreeWidgetItem *item = FindItemFolder("Folder");

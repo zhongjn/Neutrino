@@ -7,6 +7,7 @@ send::send(QWidget *parent) :
 {
     ui->setupUi(this);
 	ptLoop = new QEventLoop(this);
+	setWindowFlags(windowFlags()&~Qt::WindowCloseButtonHint&~Qt::WindowContextHelpButtonHint);
 	connect(ui->pushButton_send, SIGNAL(clicked()), this, SLOT(OnSendClicked()));
 	connect(ui->pushButton_return, SIGNAL(clicked()), this, SLOT(OnReturnClicked()));
 	connect(ui->pushButton_attach, SIGNAL(clicked()), this, SLOT(OnAttachClicked()));
@@ -36,7 +37,7 @@ void send::OnSendClicked()
 	MailAddress receiver(ui->lineEdit_2->text().toStdString());
 	Mail mail(std::move(subject), std::move(content), madr, std::move(receiver));
 	mgr->SendMail(mail, file);
-	QMessageBox::warning(this, "WARNING", "Send Successfully");
+	QMessageBox::information(this, "WARNING", "Send Successfully");
 }
 
 void send::OnAttachClicked()

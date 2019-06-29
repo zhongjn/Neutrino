@@ -7,9 +7,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-	
+	setFixedSize(this->width(), this->height());
 	connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(OnSigninClicked()));
 	connect(ui->pushButton_2, SIGNAL(clicked()), this, SLOT(OnCloseClicked()));
+	if (!mgr->IsLoginNeeded()) {
+		QMessageBox::information(this, "PASS", "You have been remembered and you can sign in without inputs");
+	}
+	
 }
 
 MainWindow::~MainWindow()
@@ -26,9 +30,9 @@ void MainWindow::OnSigninClicked()
 	QString pop3 = ui->lineEdit_pop3->text();
 	QString pop3_port = ui->lineEdit_pop3_port->text();
 	madr = MailAddress(account.toStdString());
-	/*
-	if (mgr.IsLoginNeeded()) {
-		if (!mgr.Login(CredentialInfo(madr, password.toStdString(), ServerEndPoint(smtp.toStdString(), smtp_port.toInt()), ServerEndPoint(pop3.toStdString(), pop3_port.toInt())), 
+	
+	if (mgr->IsLoginNeeded()) {
+		if (!mgr->Login(CredentialInfo(madr, password.toStdString(), ServerEndPoint(smtp.toStdString(), smtp_port.toInt()), ServerEndPoint(pop3.toStdString(), pop3_port.toInt())), 
 			ui->checkBox->isChecked())
 		)
 		{
@@ -36,11 +40,12 @@ void MainWindow::OnSigninClicked()
 			return;
 		}
 	}
-	*/
+	/*
 	madr = MailAddress("610223674@qq.com");
 	mgr->Login(CredentialInfo(madr, "ycagpzuevtubbbee",
 		ServerEndPoint("smtp.qq.com", 465), ServerEndPoint("pop.qq.com", 995)), ui->checkBox->isChecked());
-	QMessageBox::warning(this, "WARNING", "Please wait for finishing fetching");
+	*/
+	QMessageBox::information(this, "WARNING", "Please wait for a moment until fetching finished");
 	inbox w;
 	this->hide();
 	if (w.exec() == true) {

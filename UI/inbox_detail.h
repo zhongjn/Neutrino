@@ -3,6 +3,8 @@
 #pragma execution_character_set("UTF-8")
 #include <QWidget>
 #include <QEventLoop>
+#include <QDesktopServices>
+#include <QUrl>
 #include "Mail.h"
 #include "UI/send.h"
 
@@ -27,6 +29,7 @@ private slots:
 	void OnReplyClicked();
 	void OnDeleteClicked();
 	void OnMarkClicked();
+	void OnFileClicked();
 };
 
 #endif // INBOX_DETAIL_H

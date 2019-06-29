@@ -18,6 +18,7 @@ inbox_detail::inbox_detail(Mail *mail, QWidget *parent) :
 	connect(ui->pushButton_reply, SIGNAL(clicked()), this, SLOT(OnReplyClicked()));
 	connect(ui->pushButton_delete, SIGNAL(clicked()), this, SLOT(OnDeleteClicked()));
 	connect(ui->comboBox_mark, SIGNAL(currentIndexChanged(QString)), this, SLOT(OnMarkClicked()));
+	connect(ui->pushButton_file, SIGNAL(clicked()), this, SLOT(OnFileClicked()));
 }
 
 inbox_detail::~inbox_detail()
@@ -69,4 +70,11 @@ void inbox_detail::OnMarkClicked()
 		mgr->SetMailFlag(m->GetId(), false);
 	}
 	ui->comboBox_mark->setCurrentIndex(0);
+}
+
+void inbox_detail::OnFileClicked()
+{
+	string att = "explorer /select, ./attachments/" + m->GetAttachmentName();
+	system(att.c_str());
+	//QDesktopServices::openUrl(QUrl(QString::fromStdString(att), QUrl::TolerantMode));
 }
