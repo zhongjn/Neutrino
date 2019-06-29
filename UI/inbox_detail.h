@@ -1,6 +1,6 @@
 #ifndef INBOX_DETAIL_H
 #define INBOX_DETAIL_H
-
+#pragma execution_character_set("UTF-8")
 #include <QWidget>
 #include <QEventLoop>
 #include "Mail.h"

@@ -9,6 +9,7 @@ inbox::inbox(QWidget *parent) :
     ui->setupUi(this);
 	ptLoop = new QEventLoop(this);
 	block = false;
+	//QMessageBox::warning(this, "WARNING", "Please wait for finishing fetching");
 	mgr->FetchMails();
 
 	QTreeWidgetItem *item = FindItemFolder("Folder");
@@ -126,7 +127,6 @@ void inbox::MailSearch(bool flag)
 		mails = mgr->ListMails(sour, con);
 	}
 	for (auto& mail : mails) {
-		//mail
 		count++;
 
 		MailChoose* mc = new MailChoose(&mail, &cid, ui->scrollArea_mail);

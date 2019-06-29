@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
 	
 	connect(ui->pushButton, SIGNAL(clicked()), this, SLOT(OnSigninClicked()));
 	connect(ui->pushButton_2, SIGNAL(clicked()), this, SLOT(OnCloseClicked()));
-	
 }
 
 MainWindow::~MainWindow()
@@ -41,6 +40,7 @@ void MainWindow::OnSigninClicked()
 	madr = MailAddress("610223674@qq.com");
 	mgr->Login(CredentialInfo(madr, "ycagpzuevtubbbee",
 		ServerEndPoint("smtp.qq.com", 465), ServerEndPoint("pop.qq.com", 995)), ui->checkBox->isChecked());
+	QMessageBox::warning(this, "WARNING", "Please wait for finishing fetching");
 	inbox w;
 	this->hide();
 	if (w.exec() == true) {

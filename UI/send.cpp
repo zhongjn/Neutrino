@@ -9,6 +9,9 @@ send::send(QWidget *parent) :
 	ptLoop = new QEventLoop(this);
 	connect(ui->pushButton_send, SIGNAL(clicked()), this, SLOT(OnSendClicked()));
 	connect(ui->pushButton_return, SIGNAL(clicked()), this, SLOT(OnReturnClicked()));
+	connect(ui->pushButton_attach, SIGNAL(clicked()), this, SLOT(OnAttachClicked()));
+	connect(ui->pushButton_clear, SIGNAL(clicked()), this, SLOT(OnClearClicked()));
+	
 }
 
 send::~send()
@@ -32,5 +35,19 @@ void send::OnSendClicked()
 	string content = ui->textEdit->toPlainText().toStdString();
 	MailAddress receiver(ui->lineEdit_2->text().toStdString());
 	Mail mail(std::move(subject), std::move(content), madr, std::move(receiver));
-	mgr->SendMail(mail);
+	mgr->SendMail(mail, file);
+	QMessageBox::warning(this, "WARNING", "Send Successfully");
+}
+
+void send::OnAttachClicked()
+{
+	this->file = QFileDialog::getOpenFileName(NULL, "Choose a file", ".").toStdString();
+}
+
+void send::OnClearClicked()
+{
+	ui->lineEdit_3->clear();
+	ui->textEdit->clear();
+	ui->lineEdit_2->clear();
+	file = Null();
 }

@@ -1,6 +1,6 @@
 #ifndef INBOX_H
 #define INBOX_H
-
+#pragma execution_character_set("UTF-8")
 #include <QWidget>
 #include <QTreeWidget>
 #include <QEventLoop>

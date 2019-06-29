@@ -11,7 +11,6 @@ inbox_detail::inbox_detail(Mail *mail, QWidget *parent) :
 	ui->label_title->setText(QString::fromStdString(mail->GetSubject()));
 	ui->label_sender->setText(QString::fromStdString(mail->GetSender()));
 	//ui->label_time->setText(QString::fromStdString(mail->GetSender()));
-	//TODO
 	ui->label_time->setText("2019-06-12");
 	ui->textBrowser->setText(QString::fromStdString(mail->GetContent()));
 

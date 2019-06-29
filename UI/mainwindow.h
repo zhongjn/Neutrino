@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#pragma execution_character_set("UTF-8")
+
 #include <QMainWindow>
 #include <QString>
 #include <QMessageBox>
