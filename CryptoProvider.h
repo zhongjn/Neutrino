@@ -10,6 +10,7 @@
 
 using namespace std;
 
+// 密码服务基类
 class CryptoProvider {
 public:
     virtual string Encrypt(const string& str) = 0;
@@ -24,72 +25,35 @@ public:
         _key = key + "aaasdasdjhasldhasjkdhas";
     }
     string Encrypt(const string& src) {
-        size_t length = src.length();
-        int block_num = length / BLOCK_SIZE + 1;
-        //明文
-        char* szDataIn = new char[block_num * BLOCK_SIZE + 1];
-        memset(szDataIn, 0x00, block_num * BLOCK_SIZE + 1);
-        strcpy(szDataIn, src.c_str());
-
-        //进行PKCS7Padding填充。
-        int k = length % BLOCK_SIZE;
-        int j = length / BLOCK_SIZE;
-        int padding = BLOCK_SIZE - k;
-        for (int i = 0; i < padding; i++)
-        {
-            szDataIn[j * BLOCK_SIZE + k + i] = padding;
-        }
-        szDataIn[block_num * BLOCK_SIZE] = '\0';
-
-        //加密后的密文
-        char* szDataOut = new char[block_num * BLOCK_SIZE + 1];
-        memset(szDataOut, 0, block_num * BLOCK_SIZE + 1);
-
-        //进行进行AES的CBC模式加密
+        int len = src.length();
+        int n_blocks = len / BLOCK_SIZE + 1;
+        char* plain = new char[n_blocks * BLOCK_SIZE + 1];
+        memset(plain, 0x00, n_blocks * BLOCK_SIZE + 1);
+        strcpy(plain, src.c_str());
+        char* cipher = new char[n_blocks * BLOCK_SIZE + 1];
+        memset(cipher, 0, n_blocks * BLOCK_SIZE + 1);
         AES aes;
         aes.MakeKey(_key.c_str(), _iv.c_str(), 16, 16);
-        aes.Encrypt(szDataIn, szDataOut, block_num * BLOCK_SIZE, AES::CBC);
-        string str = base64_encode((unsigned char*)szDataOut,
-            block_num * BLOCK_SIZE);
-        delete[] szDataIn;
-        delete[] szDataOut;
+        aes.Encrypt(plain, cipher, n_blocks * BLOCK_SIZE, AES::CBC);
+        string str = base64_encode((unsigned char*)cipher, n_blocks * BLOCK_SIZE);
+        delete[] plain;
+        delete[] cipher;
         return str;
     }
 
     string Decrypt(const string & str) {
         string strData = base64_decode(str);
-        size_t length = strData.length();
-        //密文
-        char* szDataIn = new char[length + 1];
-        memcpy(szDataIn, strData.c_str(), length + 1);
-        //明文
-        char* szDataOut = new char[length + 1];
-        memcpy(szDataOut, strData.c_str(), length + 1);
-
-        //进行AES的CBC模式解密
+        int len = strData.length();
+        char* cipher = new char[len + 1];
+        memcpy(cipher, strData.c_str(), len + 1);
+        char* plain = new char[len + 1];
+        memcpy(plain, strData.c_str(), len + 1);
         AES aes;
         aes.MakeKey(_key.c_str(), _iv.c_str(), 16, 16);
-        aes.Decrypt(szDataIn, szDataOut, length, AES::CBC);
-
-        //去PKCS7Padding填充
-        if (0x00 < szDataOut[length - 1] <= 0x16)
-        {
-            int tmp = szDataOut[length - 1];
-            for (int i = length - 1; i >= length - tmp; i--)
-            {
-                if (szDataOut[i] != tmp)
-                {
-                    memset(szDataOut, 0, length);
-                    throw logic_error("解密失败");
-                    break;
-                }
-                else
-                    szDataOut[i] = 0;
-            }
-        }
-        string strDest(szDataOut);
-        delete[] szDataIn;
-        delete[] szDataOut;
+        aes.Decrypt(cipher, plain, len, AES::CBC);
+        string strDest(plain);
+        delete cipher;
+        delete plain;
         return strDest;
     }
 };
@@ -98,7 +62,7 @@ class Win32CryptoProvider : public CryptoProvider {
 
     string key = "asda@#%soiduo123123"; // 这个密码可以内置，因为Windows内部也有密码
 
-    bool EncryptData(const void* cbDataIn, const int nLen, const void* key, const int lenKey, void** encData, int* encLen)
+    bool Win32Encrypt(const void* cbDataIn, const int nLen, const void* key, const int lenKey, void** encData, int* encLen)
     {
         if (!cbDataIn || 0 == nLen)
             return false;
@@ -114,7 +78,7 @@ class Win32CryptoProvider : public CryptoProvider {
             BlobKey.pbData = (BYTE*)const_cast<void*>(key);
             BlobKey.cbData = lenKey;
         }
-        if (!CryptProtectData(&DataIn, L"敏感数据", key ? &BlobKey : NULL, NULL, NULL, 0, &DataOut))
+        if (!CryptProtectData(&DataIn, L"保护凭据", key ? &BlobKey : NULL, NULL, NULL, 0, &DataOut))
             return false;
         *encLen = DataOut.cbData;
         *encData = malloc(DataOut.cbData);
@@ -123,7 +87,7 @@ class Win32CryptoProvider : public CryptoProvider {
         return true;
     }
 
-    bool DecryptData(const void* encData, const int encLen, const void* key, const int lenKey, void** cbDataIn, int* nLen)
+    bool Win32Decrypt(const void* encData, const int encLen, const void* key, const int lenKey, void** cbDataIn, int* nLen)
     {
         if (!encData || 0 == encLen)
             return false;
@@ -139,13 +103,7 @@ class Win32CryptoProvider : public CryptoProvider {
         DataIn.pbData = (BYTE*)const_cast<void*>(encData);
         DataIn.cbData = encLen;
 
-        CRYPTPROTECT_PROMPTSTRUCT promp;
-        promp.cbSize = sizeof(CRYPTPROTECT_PROMPTSTRUCT);
-        promp.szPrompt = L"测试解密";
-        promp.dwPromptFlags = CRYPTPROTECT_PROMPT_ON_UNPROTECT;
-        promp.hwndApp = NULL;
-
-        if (!CryptUnprotectData(&DataIn, &pDescrOut, key ? &BlobKey : NULL, NULL, &promp, 0, &DataOut))
+        if (!CryptUnprotectData(&DataIn, &pDescrOut, key ? &BlobKey : NULL, NULL, NULL, 0, &DataOut))
             return false;
 
         *nLen = DataOut.cbData;
@@ -159,7 +117,7 @@ public:
     string Encrypt(const string& str) {
         void* r_data = nullptr;
         int r_len = 0;
-        EncryptData(str.c_str(), str.length(), key.c_str(), key.length(), &r_data, &r_len);
+        Win32Encrypt(str.c_str(), str.length(), key.c_str(), key.length(), &r_data, &r_len);
         string ret = base64_encode((uint8_t*)r_data, r_len);
         free(r_data);
         return ret;
@@ -169,7 +127,7 @@ public:
         string str_cipher = base64_decode(cipher);
         void* r_data = nullptr;
         int r_len = 0;
-        DecryptData(str_cipher.c_str(), str_cipher.length(), key.c_str(), key.length(), &r_data, &r_len);
+        Win32Decrypt(str_cipher.c_str(), str_cipher.length(), key.c_str(), key.length(), &r_data, &r_len);
         char* str = new char[r_len + 1];
         memcpy(str, r_data, r_len);
         str[r_len] = 0;

@@ -1,4 +1,6 @@
-
+// ***此代码源于互联网***
+// ***此代码源于互联网***
+// ***此代码源于互联网***
 #include "base64.h"
 #include <iostream>
 #include <ctype.h>

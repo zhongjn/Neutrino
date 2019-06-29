@@ -150,7 +150,7 @@ void MailManager::FetchMails() {
                 if (atts > 0) {
                     {
                         ofstream ofs("attachments/TEMP", std::ios::binary);
-                        msg.attachment(1, ofs, attName); 
+                        msg.attachment(1, ofs, attName);
                     }
                     rename("attachments/TEMP", ("attachments/" + attName).c_str());
                 }
@@ -158,7 +158,7 @@ void MailManager::FetchMails() {
                 string sqlInsert = string_format(
                     "INSERT INTO mails (subject, content, time, is_spam, sender, receiver, attachment_name) VALUES (%s, %s, %d, %d, %s, %s, %s)",
                     quote(msg.subject()).c_str(),
-                    quote(msg.content()).c_str(),
+                    quote(crypt_mail->Encrypt(msg.content())).c_str(),
                     time,
                     spam,
                     quote(msg.sender().address).c_str(),
@@ -176,7 +176,7 @@ void MailManager::FetchMails() {
     }
 }
 
-vector<Mail> MailManager::ListMails(const ListSource& source, const ListCondition& cond) const {
+vector<Mail> MailManager::ListMails(const ListSource & source, const ListCondition & cond) const {
     // TODO: 收件人、发件人
     vector<Mail> lst;
     stringstream ss;
@@ -214,9 +214,14 @@ vector<Mail> MailManager::ListMails(const ListSource& source, const ListConditio
     }
     ss << " ORDER BY time DESC;";
 
+    struct Param {
+        vector<Mail> mails;
+        CryptoProvider* crypt;
+    } param{ vector<Mail>(), this->crypt_mail };
+
     DB_CALLBACK(callback) {
-        DB_CALLBACK_PARAM(vector<Mail>);
-        Mail m(values[1], values[2], MailAddress(values[7]), MailAddress(values[8]));
+        DB_CALLBACK_PARAM(Param);
+        Mail m(values[1], param->crypt->Decrypt(values[2]), MailAddress(values[7]), MailAddress(values[8]));
         m.SetId(atoi(values[0]));
         m.SetRead(atoi(values[4]));
         m.SetFlag(atoi(values[5]));
@@ -225,14 +230,14 @@ vector<Mail> MailManager::ListMails(const ListSource& source, const ListConditio
         if (attName.length() > 0) {
             m.SetAttachmentName(attName);
         }
-        param->push_back(move(m));
+        param->mails.push_back(move(m));
         return 0;
     };
-    sqlite3_exec(db, ss.str().c_str(), callback, &lst, 0);
-    return lst;
+    sqlite3_exec(db, ss.str().c_str(), callback, &param, 0);
+    return param.mails;
 }
 
-void MailManager::SendMail(const Mail& mail, Nullable<string> attachment_path) const {
+void MailManager::SendMail(const Mail & mail, Nullable<string> attachment_path) const {
     if (cred) {
         message msg;
         msg.from(mail_address("SENDER", mail.GetSender().GetAddress()));
@@ -253,7 +258,7 @@ void MailManager::SendMail(const Mail& mail, Nullable<string> attachment_path) c
                 }
                 msg.attach(ifs, name, message::media_type_t::NONE, "att");
             }
-            catch (exception& ex) {
+            catch (exception & ex) {
                 cout << ex.what() << endl;
             }
         }

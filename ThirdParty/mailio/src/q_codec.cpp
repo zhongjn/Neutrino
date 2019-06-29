@@ -16,6 +16,7 @@ copy at http://www.freebsd.org/copyright/freebsd-license.html.
 #include <mailio/quoted_printable.hpp>
 #include <mailio/q_codec.hpp>
 #include <Windows.h>
+#include <iostream>
 
 using boost::iequals;
 using std::string;
@@ -149,7 +150,7 @@ string q_codec::decode(const string& text) const
             dec_text = GbkToUtf8(dec_text);
         }
         else {
-            int a = 1;
+            std::cout << "Unknown encoding: " << charset << std::endl;
         }
     }
     else if (iequals(method, QP_CODEC_STR))

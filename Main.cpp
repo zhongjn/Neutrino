@@ -13,12 +13,13 @@
 
 int main(int argc, char *argv[])
 {
-    //string origin = "test string here";
-    //CryptoProvider* crypto = new Win32CryptoProvider();
-    //string im = crypto->Encrypt(origin);
-    //cout << im << endl;
-    //string res = crypto->Decrypt(im);
-    //cout << res << endl;
+    string origin = "test string here";
+    CryptoProvider* crypto = new Win32CryptoProvider();
+    string im = crypto->Encrypt(origin);
+    im = "asdasidj";
+    cout << im << endl;
+    string res = crypto->Decrypt(im);
+    cout << res << endl;
 
 
 

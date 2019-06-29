@@ -1,4 +1,7 @@
-﻿#include <cstring>
+﻿// ***此代码源于互联网***
+// ***此代码源于互联网***
+// ***此代码源于互联网***
+#include <cstring>
 #include <exception>
 #include "AES.h"
 #include <iostream>
