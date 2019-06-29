@@ -156,11 +156,13 @@ void MailManager::FetchMails() {
                 }
 
                 string sqlInsert = string_format(
-                    "INSERT INTO mails (subject, content, time, is_spam, attachment_name) VALUES (%s, %s, %d, %d, %s)",
+                    "INSERT INTO mails (subject, content, time, is_spam, sender, receiver, attachment_name) VALUES (%s, %s, %d, %d, %s, %s, %s)",
                     quote(msg.subject()).c_str(),
                     quote(msg.content()).c_str(),
                     time,
                     spam,
+                    quote(msg.sender().address).c_str(),
+                    quote(msg.recipients_to_string()).c_str(),
                     quote(attName).c_str()
                 );
                 char* errmsg;
