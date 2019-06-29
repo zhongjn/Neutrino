@@ -1,5 +1,5 @@
 #pragma once
-
+#pragma execution_character_set("UTF-8")
 #include <QWidget>
 #include <QLabel>
 #include <QFont>
