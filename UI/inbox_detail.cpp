@@ -74,7 +74,6 @@ void inbox_detail::OnMarkClicked()
 
 void inbox_detail::OnFileClicked()
 {
-	string att = "explorer /select, ./attachments/" + m->GetAttachmentName();
+	string att = "explorer /select,attachments\\" + m->GetAttachmentName().Value();
 	system(att.c_str());
-	//QDesktopServices::openUrl(QUrl(QString::fromStdString(att), QUrl::TolerantMode));
 }

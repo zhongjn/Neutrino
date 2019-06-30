@@ -89,28 +89,25 @@ Nullable<CredentialInfo> MailManager::LoadSavedCredential() {
 MailManager::~MailManager() { sqlite3_close(db); }
 
 bool MailManager::Login(const CredentialInfo& cred, bool rememberMe) {
-    if (IsLoginNeeded()) {
-        if (VerifyCredential(cred)) {
-            this->cred = cred;
-            string sqldel = "DELETE FROM cred;";
-            sqlite3_exec(db, sqldel.c_str(), 0, 0, 0);
-            if (rememberMe) {
-                char* err = nullptr;
-                string sql = string_format(
-                    "INSERT INTO cred (username, password, smtp_addr, smtp_port, pop3_addr, pop3_port) VALUES (%s, %s, %s, %d, %s, %d);",
-                    quote(cred.GetUsername()).c_str(),
-                    quote(crypt_cred->Encrypt(cred.GetPassword())).c_str(),
-                    quote(cred.GetSmtp().GetIPAddress()).c_str(),
-                    cred.GetSmtp().GetPort(),
-                    quote(cred.GetPop3().GetIPAddress()).c_str(),
-                    cred.GetPop3().GetPort());
-                sqlite3_exec(db, sql.c_str(), 0, 0, &err);
-            }
-            return true;
+    if (VerifyCredential(cred)) {
+        this->cred = cred;
+        string sqldel = "DELETE FROM cred;";
+        sqlite3_exec(db, sqldel.c_str(), 0, 0, 0);
+        if (rememberMe) {
+            char* err = nullptr;
+            string sql = string_format(
+                "INSERT INTO cred (username, password, smtp_addr, smtp_port, pop3_addr, pop3_port) VALUES (%s, %s, %s, %d, %s, %d);",
+                quote(cred.GetUsername()).c_str(),
+                quote(crypt_cred->Encrypt(cred.GetPassword())).c_str(),
+                quote(cred.GetSmtp().GetIPAddress()).c_str(),
+                cred.GetSmtp().GetPort(),
+                quote(cred.GetPop3().GetIPAddress()).c_str(),
+                cred.GetPop3().GetPort());
+            sqlite3_exec(db, sql.c_str(), 0, 0, &err);
         }
-        return false;
+        return true;
     }
-    return true;
+    return false;
 }
 
 void MailManager::FetchMails() {

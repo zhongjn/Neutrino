@@ -23,6 +23,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    void ShowInbox();
 
 private slots:
 	void OnSigninClicked();
