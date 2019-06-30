@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget* parent) :
         // QMessageBox::information(this, "PASS", "You have been remembered and you can sign in without inputs");
         auto result = QMessageBox::question(this, "Remember Me", "You have been remembered. Do you want to sign in directly?", QMessageBox::Yes | QMessageBox::No);
         if (result == QMessageBox::Yes) {
+            madr = mgr->Address();
             ShowInbox();
         }
     }

@@ -43,8 +43,6 @@ struct ListCondition {
 };
 
 class MailManager {
-    //PROPERTY_WRITE(Nullable<CredentialInfo>, Credential)
-        // TODO: 其他属性？
 
 private:
     sqlite3* db = nullptr;
@@ -54,7 +52,10 @@ private:
     CryptoProvider* crypt_cred = new Win32CryptoProvider();
     CryptoProvider* crypt_mail = new AES256CryptoProvider("asd12@!#*asd");
 
+    // 加载已保存的凭据
     Nullable<CredentialInfo> LoadSavedCredential();
+
+    // 验证邮箱凭据是否有效
     bool VerifyCredential(const CredentialInfo& cred);
 
 public:
@@ -63,7 +64,11 @@ public:
     MailManager(MailManager&&) = default;
     ~MailManager();
 
+    // 是否需要登录？
     bool IsLoginNeeded() { return !cred; }
+
+    string Address() { return cred.Value().GetUsername(); }
+
     bool Login(const CredentialInfo& cred, bool rememberMe);
 
     // 拉取在线邮件，写到本地

@@ -7,6 +7,7 @@
 
 using namespace mailio;
 
+// 验证邮箱凭据是否有效
 bool MailManager::VerifyCredential(const CredentialInfo& cred) {
     try {
         auto& pop3 = cred.GetPop3();
@@ -29,6 +30,7 @@ bool MailManager::VerifyCredential(const CredentialInfo& cred) {
 MailManager::MailManager() {
     sqlite3_open("data.db", &db);
 
+    // 初始化数据库表
     string sqlCreateCredential = R"(
         CREATE TABLE IF NOT EXISTS cred (
             username text,
@@ -66,17 +68,21 @@ MailManager::MailManager() {
     sqlite3_exec(db, sqlCreateMails.c_str(), nullptr, nullptr, nullptr);
     sqlite3_exec(db, sqlCreateFolders.c_str(), nullptr, nullptr, nullptr);
 
+    // 加载记住的凭据
     Nullable<CredentialInfo> saved = LoadSavedCredential();
     if (saved) Login(saved.Value(), true);
 }
 
 Nullable<CredentialInfo> MailManager::LoadSavedCredential() {
     string sql = "SELECT username, password, smtp_addr, smtp_port, pop3_addr, pop3_port FROM cred";
+
+    // 手动构造函数闭包（因为SQLite只接受函数指针）
     struct Param {
         Nullable<CredentialInfo> cred;
         CryptoProvider* crypt;
     } param{ Null(), this->crypt_cred };
 
+    // 使用自定义宏简化回调函数
     DB_CALLBACK(callback) {
         DB_CALLBACK_PARAM(Param);
         param->cred = CredentialInfo(MailAddress(values[0]), param->crypt->Decrypt(values[1]), ServerEndPoint(values[2], atoi(values[3])), ServerEndPoint(values[4], atoi(values[5])));
@@ -122,6 +128,8 @@ void MailManager::FetchMails() {
 
         time_t maxTime = -1;
         string sqlMaxTime = "SELECT MAX(time) FROM mails;";
+
+        // 使用自定义宏简化回调函数
         DB_CALLBACK(callback) {
             DB_CALLBACK_PARAM(time_t);
             *param = values[0] ? atoi(values[0]) : 0;
@@ -129,6 +137,7 @@ void MailManager::FetchMails() {
         };
         sqlite3_exec(db, sqlMaxTime.c_str(), callback, &maxTime, 0);
 
+        // 逆序拉取邮件，发现已有时可以及时停止，最小化工作量
         for (int i = mails.size(); i >= 1; i--) {
             message msgHeader;
             conn.fetch(i, msgHeader, true);
@@ -158,7 +167,7 @@ void MailManager::FetchMails() {
                     quote(crypt_mail->Encrypt(msg.content())).c_str(),
                     time,
                     spam,
-                    quote(msg.sender().address).c_str(),
+                    quote(msg.from_to_string()).c_str(),
                     quote(msg.recipients_to_string()).c_str(),
                     quote(attName).c_str()
                 );
@@ -174,7 +183,7 @@ void MailManager::FetchMails() {
 }
 
 vector<Mail> MailManager::ListMails(const ListSource & source, const ListCondition & cond) const {
-    // TODO: 收件人、发件人
+
     vector<Mail> lst;
     stringstream ss;
     ss << R"(
@@ -216,6 +225,7 @@ vector<Mail> MailManager::ListMails(const ListSource & source, const ListConditi
         CryptoProvider* crypt;
     } param{ vector<Mail>(), this->crypt_mail };
 
+    // 使用自定义宏简化回调函数
     DB_CALLBACK(callback) {
         DB_CALLBACK_PARAM(Param);
         Mail m(values[1], param->crypt->Decrypt(values[2]), MailAddress(values[7]), MailAddress(values[8]));
@@ -235,39 +245,44 @@ vector<Mail> MailManager::ListMails(const ListSource & source, const ListConditi
 }
 
 void MailManager::SendMail(const Mail & mail, Nullable<string> attachment_path) const {
-    if (cred) {
-        message msg;
-        msg.from(mail_address("SENDER", mail.GetSender().GetAddress()));
-        msg.add_recipient(
-            mail_address("RECEIVER", mail.GetReceiver().GetAddress()));
-        msg.subject(mail.GetSubject());
-        msg.content(mail.GetContent());
+    try {
+        if (cred) {
+            message msg;
+            msg.from(mail_address("SENDER", mail.GetSender().GetAddress()));
+            msg.add_recipient(
+                mail_address("RECEIVER", mail.GetReceiver().GetAddress()));
+            msg.subject(mail.GetSubject());
+            msg.content(mail.GetContent());
 
-        if (attachment_path) {
-            string att = attachment_path.Value();
-            try {
-                ifstream ifs(att);
-                const size_t last_slash_idx = att.find_last_of("\\/");
-                string name = att;
-                if (std::string::npos != last_slash_idx)
-                {
-                    name.erase(0, last_slash_idx + 1);
+            if (attachment_path) {
+                string att = attachment_path.Value();
+                try {
+                    ifstream ifs(att);
+                    const size_t last_slash_idx = att.find_last_of("\\/");
+                    string name = att;
+                    if (std::string::npos != last_slash_idx)
+                    {
+                        name.erase(0, last_slash_idx + 1);
+                    }
+                    msg.attach(ifs, name, message::media_type_t::NONE, "att");
                 }
-                msg.attach(ifs, name, message::media_type_t::NONE, "att");
+                catch (exception & ex) {
+                    cout << ex.what() << endl;
+                }
             }
-            catch (exception & ex) {
-                cout << ex.what() << endl;
-            }
-        }
 
-        auto& smtp = cred->GetSmtp();
-        smtps conn(smtp.GetIPAddress(), smtp.GetPort());
-        conn.authenticate(cred->GetUsername(), cred->GetPassword(),
-            smtps::auth_method_t::LOGIN);
-        conn.submit(msg);
+            auto& smtp = cred->GetSmtp();
+            smtps conn(smtp.GetIPAddress(), smtp.GetPort());
+            conn.authenticate(cred->GetUsername(), cred->GetPassword(),
+                smtps::auth_method_t::LOGIN);
+            conn.submit(msg);
+        }
+        else {
+            throw "Credential not set!";
+        }
     }
-    else {
-        throw "Credential not set!";
+    catch (exception & ex) {
+        cout << ex.what() << endl;
     }
 }
 
