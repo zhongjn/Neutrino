@@ -1,5 +1,6 @@
 .vs
 .vscode
+attachments
 
 CMakeSettings.json
 CMakeLists.txt.user
