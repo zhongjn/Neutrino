@@ -92,11 +92,19 @@ void inbox::OnTreeChosen()
 
 void inbox::OnSearchEnter()
 {
-	MailSearch(true);
+	if (block == true) {
+		QMessageBox::warning(this, "WARNING", "Please return to the mailbox first");
+	}
+	else {
+		MailSearch(true);
+	}
 }
 
 void inbox::MailSearch(bool flag)
 {
+	if (block == true) {
+		return;
+	}
 	for (auto &v : vc) {
 		delete v;
 	}

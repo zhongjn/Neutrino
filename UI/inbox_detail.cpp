@@ -8,6 +8,7 @@ inbox_detail::inbox_detail(Mail *mail, QWidget *parent) :
 	ui->setupUi(this);
 	m = mail;
 	ptLoop = new QEventLoop(this);
+	//setFocusPolicy(Qt::StrongFocus);
 	ui->label_title->setText(QString::fromStdString(mail->GetSubject()));
 	ui->label_sender->setText(QString::fromStdString(mail->GetSender()));
 	//ui->label_time->setText(QString::fromStdString(mail->GetSender()));
@@ -29,6 +30,7 @@ inbox_detail::~inbox_detail()
 void inbox_detail::exec()
 {
 	this->show();
+	this->setFocusPolicy(Qt::StrongFocus);
 	ptLoop->exec();
 }
 
@@ -74,6 +76,11 @@ void inbox_detail::OnMarkClicked()
 
 void inbox_detail::OnFileClicked()
 {
-	string att = "explorer /select,attachments\\" + m->GetAttachmentName().Value();
-	system(att.c_str());
+	if (m->GetAttachmentName().Null()) {
+		QMessageBox::warning(this, "WARNING", "This mail does not have attachment");
+	}
+	else {
+		string att = "explorer /select,attachments\\" + m->GetAttachmentName().Value();
+		system(att.c_str());
+	}
 }
