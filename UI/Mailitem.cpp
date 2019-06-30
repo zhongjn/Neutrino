@@ -13,6 +13,7 @@ void MailMore::OnMoreClicked()
 	mgr->SetMailRead(m->GetId(), true);
 	*block = true;
 	inbox_detail *w = new inbox_detail(m, parentWidget());
+	//inbox_detail *w = new inbox_detail(m);
 	w->exec();
 	*block = false;
 	onRefresh();
@@ -51,7 +52,7 @@ void MailChoose::OnChooseClicked()
 MailRead::MailRead(Mail *mail, QWidget *parent) : QCheckBox(parent)
 {
 	m = mail;
-	this->setCheckable(false);
+	//this->setCheckable(false);
 	this->setText("unread");
 	this->setChecked(m->GetRead());
 	connect(this, SIGNAL(clicked()), this, SLOT(OnReadClicked()));
@@ -59,13 +60,14 @@ MailRead::MailRead(Mail *mail, QWidget *parent) : QCheckBox(parent)
 
 void MailRead::OnReadClicked()
 {
+	this->setChecked(!isChecked());
 	mgr->SetMailRead(m->GetId(), this->isChecked());
 }
 
 MailFlag::MailFlag(Mail *mail, QWidget *parent) : QCheckBox(parent)
 {
 	m = mail;
-	this->setCheckable(false);
+	//this->setCheckable(false);
 	this->setText("flag");
 	this->setChecked(m->GetFlag());
 	connect(this, SIGNAL(clicked()), this, SLOT(OnFlagClicked()));
@@ -73,6 +75,7 @@ MailFlag::MailFlag(Mail *mail, QWidget *parent) : QCheckBox(parent)
 
 void MailFlag::OnFlagClicked()
 {
+	this->setChecked(!isChecked());
 	mgr->SetMailFlag(m->GetId(), this->isChecked());
 }
 
