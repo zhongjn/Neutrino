@@ -676,7 +676,7 @@ void mime::parse_header_name_value(const string& header_line, string& header_nam
             break;
         }
         
-        if (is_header_name && !isalpha(header_line[colon_pos]) && !isdigit(header_line[colon_pos]) &&
+        if (is_header_name && !isalpha((unsigned char)header_line[colon_pos]) && !isdigit((unsigned char)header_line[colon_pos]) &&
             HEADER_NAME_ALPHABET.find(header_line[colon_pos]) == string::npos)
         {
             throw mime_error("Parsing failure of header name.");
@@ -697,7 +697,7 @@ void mime::parse_content_type(const string& content_type_hdr, media_type_t& medi
     string media_type_s;
     // flag if media type or subtype is being parsed
     bool is_media_type = true;
-    for (auto ch : header_value)
+    for (unsigned char ch : header_value)
     {
         if (ch == codec::SLASH_CHAR)
         {
@@ -799,79 +799,80 @@ void mime::parse_header_value_attributes(const string& header, string& header_va
 
     for (auto ch = header.begin(); ch != header.end(); ch++)
     {
+        unsigned char cc = *ch;
         switch (state)
         {
             case state_t::BEGIN:
-                if (isspace(*ch))
+                if (isspace(cc))
                     ;
-                else if (isalpha(*ch) || isdigit(*ch))
+                else if (isalpha(cc) || isdigit(cc))
                 {
                     state = state_t::VALUE;
-                    header_value += *ch;
+                    header_value += cc;
                 }
                 else
-                    throw mime_error("Parsing header value failure at `" + string(1, *ch) + "`.");
+                    throw mime_error("Parsing header value failure at `" + string(1, cc) + "`.");
                 break;
                 
             case state_t::VALUE:
-                if (isalpha(*ch) || isdigit(*ch) || CONTENT_HEADER_VALUE_ALPHABET.find(*ch) != string::npos)
-                    header_value += *ch;
-                else if (*ch == codec::SEMICOLON_CHAR)
+                if (isalpha(cc) || isdigit(cc) || CONTENT_HEADER_VALUE_ALPHABET.find(cc) != string::npos)
+                    header_value += cc;
+                else if (cc == codec::SEMICOLON_CHAR)
                     state = state_t::ATTR_BEGIN;
                 else
-                    throw mime_error("Parsing header value failure at `" + string(1, *ch) + "`.");
+                    throw mime_error("Parsing header value failure at `" + string(1, cc) + "`.");
                 break;
 
             case state_t::ATTR_BEGIN:
-                if (isspace(*ch))
+                if (isspace(cc))
                     ;
-                else if (isalpha(*ch) || isdigit(*ch) || CONTENT_ATTR_ALPHABET.find(*ch) != string::npos)
+                else if (isalpha(cc) || isdigit(cc) || CONTENT_ATTR_ALPHABET.find(cc) != string::npos)
                 {
                     state = state_t::ATTR_NAME;
-                    attribute_name += *ch;
+                    attribute_name += cc;
                 }
-                else if (*ch == codec::EQUAL_CHAR)
+                else if (cc == codec::EQUAL_CHAR)
                     state = state_t::ATTR_VALUE;
                 else
-                    throw mime_error("Parsing attribute name failure at `" + string(1, *ch) + "`.");
+                    throw mime_error("Parsing attribute name failure at `" + string(1, cc) + "`.");
                 break;
 
             case state_t::ATTR_NAME:
-                if (isalpha(*ch) || isdigit(*ch) || CONTENT_ATTR_ALPHABET.find(*ch) != string::npos)
-                    attribute_name += *ch;
-                else if (*ch == codec::EQUAL_CHAR)
+                if (isalpha(cc) || isdigit(cc) || CONTENT_ATTR_ALPHABET.find(cc) != string::npos)
+                    attribute_name += cc;
+                else if (cc == codec::EQUAL_CHAR)
                     state = state_t::ATTR_VALUE;
                 break;
 
             case state_t::ATTR_VALUE:
-                if (*ch == codec::QUOTE_CHAR)
+                if (cc == codec::QUOTE_CHAR)
                     state = state_t::QATTR_VALUE_BEGIN;
-                else if (isalpha(*ch) || isdigit(*ch) || CONTENT_ATTR_ALPHABET.find(*ch) != string::npos)
+                else if (isalpha(cc) || isdigit(cc) || CONTENT_ATTR_ALPHABET.find(cc) != string::npos)
                 {
                     state = state_t::ATTR_VALUE_BEGIN;
-                    attribute_value += *ch;
+                    attribute_value += cc;
                 }
                 else
-                    throw mime_error("Parsing attribute value failure at `" + string(1, *ch) + "`.");
+                    throw mime_error("Parsing attribute value failure at `" + string(1, cc) + "`.");
                 break;
 
             case state_t::QATTR_VALUE_BEGIN:
-                if (isalpha(*ch) || isdigit(*ch) || QTEXT.find(*ch) != string::npos)
-                    attribute_value += *ch;
-                else if (*ch == codec::QUOTE_CHAR)
+                if (isalpha(cc) || isdigit(cc) || QTEXT.find(cc) != string::npos)
+                    attribute_value += cc;
+                else if (cc == codec::QUOTE_CHAR)
                     state = state_t::ATTR_VALUE_END;
                 else
-                    throw mime_error("Parsing attribute value failure at `" + string(1, *ch) + "`.");
+                    throw mime_error("Parsing attribute value failure at `" + string(1, cc) + "`.");
                 if (ch == header.end() - 1)
                     attributes[attribute_name] = attribute_value;
                 break;
 
             case state_t::ATTR_VALUE_BEGIN:
-                if (isalpha(*ch) || isdigit(*ch) || CONTENT_ATTR_ALPHABET.find(*ch) != string::npos)
-                    attribute_value += *ch;
-                else if (isspace(*ch))
+                if (isalpha(cc) || isdigit(cc) || CONTENT_ATTR_ALPHABET.find(cc) != string::npos)
+                    attribute_value += cc;
+                else if (isspace(cc))
                     state = state_t::ATTR_VALUE_END;
-                else if (*ch == codec::SEMICOLON_CHAR)
+                else if (cc == codec::SEMICOLON_CHAR)
                 {
                     state = state_t::ATTR_BEGIN;
                     attributes[attribute_name] = attribute_value;
@@ -879,7 +880,7 @@ void mime::parse_header_value_attributes(const string& header, string& header_va
                     attribute_value.clear();
                 }
                 else
-                    throw mime_error("Parsing attribute value failure at `" + string(1, *ch) + "`.");
+                    throw mime_error("Parsing attribute value failure at `" + string(1, cc) + "`.");
                 if (ch == header.end() - 1)
                     attributes[attribute_name] = attribute_value;
                 break;
@@ -889,12 +890,12 @@ void mime::parse_header_value_attributes(const string& header, string& header_va
                 attribute_name.clear();
                 attribute_value.clear();
 
-                if (isspace(*ch))
+                if (isspace(cc))
                     ;
-                else if (*ch == codec::SEMICOLON_CHAR)
+                else if (cc == codec::SEMICOLON_CHAR)
                     state = state_t::ATTR_BEGIN;
                 else
-                    throw mime_error("Parsing attribute value failure at `" + string(1, *ch) + "`.");
+                    throw mime_error("Parsing attribute value failure at `" + string(1, cc) + "`.");
         }
     }
 }

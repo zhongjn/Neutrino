@@ -173,12 +173,13 @@ string q_codec::check_decode(const string& text) const
 
     for (auto ch = text.begin(); ch != text.end(); ch++)
     {
-        if (*ch == codec::QUESTION_MARK_CHAR)
+        unsigned char cc = *ch;
+        if (cc == codec::QUESTION_MARK_CHAR)
             ++question_mark_counter;
 
-        if (*ch == codec::EQUAL_CHAR && ch + 1 != text.end() && *(ch + 1) == codec::QUESTION_MARK_CHAR && !is_encoded)
+        if (cc == codec::EQUAL_CHAR && ch + 1 != text.end() && *(ch + 1) == codec::QUESTION_MARK_CHAR && !is_encoded)
             is_encoded = true;
-        else if (*ch == codec::QUESTION_MARK_CHAR && ch + 1 != text.end() && *(ch + 1) == codec::EQUAL_CHAR && question_mark_counter == QUESTION_MARKS_NO)
+        else if (cc == codec::QUESTION_MARK_CHAR && ch + 1 != text.end() && *(ch + 1) == codec::EQUAL_CHAR && question_mark_counter == QUESTION_MARKS_NO)
         {
             is_encoded = false;
             question_mark_counter = 0;
@@ -187,9 +188,9 @@ string q_codec::check_decode(const string& text) const
             ch++;
         }
         else if (is_encoded == true)
-            encoded_part.append(1, *ch);
+            encoded_part.append(1, cc);
         else
-            dec_text.append(1, *ch);
+            dec_text.append(1, cc);
     }
 
     if (is_encoded && question_mark_counter < QUESTION_MARKS_NO)

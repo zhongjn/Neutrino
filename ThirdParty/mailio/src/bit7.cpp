@@ -39,12 +39,13 @@ vector<string> bit7::encode(const string& text) const
     string::size_type line_len = 0;
     for (auto ch = text.begin(); ch != text.end(); ch++)
     {
-        if (is_allowed(*ch))
+        unsigned char cc = *ch;
+        if (is_allowed(cc))
         {
-            line += *ch;
+            line += cc;
             line_len++;
         }
-        else if (*ch == '\r' && (ch + 1) != text.end() && *(ch + 1) == '\n')
+        else if (cc == '\r' && (ch + 1) != text.end() && *(ch + 1) == '\n')
         {
             enc_text.push_back(line);
             line.clear();
@@ -53,7 +54,7 @@ vector<string> bit7::encode(const string& text) const
             ch++;
         }
         else
-            throw codec_error("Bad character `" + string(1, *ch) + "`.");
+            throw codec_error("Bad character `" + string(1, cc) + "`.");
         
         if (line_len == string::size_type(_line_policy))
         {

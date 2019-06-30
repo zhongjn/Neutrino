@@ -124,7 +124,13 @@ void MailManager::FetchMails() {
         conn.authenticate(cred->GetUsername(), cred->GetPassword(),
             pop3s::auth_method_t::LOGIN);
 
-        auto mails = conn.list(0); // (序号, id）
+        map<unsigned int, unsigned long> mails;
+        try {
+            mails = conn.list(0); // (序号, id）
+        }
+        catch (exception & ex) {
+            cout << ex.what() << endl;
+        }
 
         time_t maxTime = -1;
         string sqlMaxTime = "SELECT MAX(time) FROM mails;";
@@ -139,43 +145,48 @@ void MailManager::FetchMails() {
 
         // 逆序拉取邮件，发现已有时可以及时停止，最小化工作量
         for (int i = mails.size(); i >= 1; i--) {
-            message msgHeader;
-            conn.fetch(i, msgHeader, true);
-            time_t time = to_time_t(msgHeader.date_time().local_time());
-            if (time > maxTime) {
-                cout << "Writing into sqlite: " << msgHeader.subject() << endl;
-                message msg;
-                conn.fetch(i, msg, false);
+            try {
+                message msgHeader;
+                conn.fetch(i, msgHeader, true);
+                time_t time = to_time_t(msgHeader.date_time().local_time());
+                if (time > maxTime) {
+                    cout << "Writing into sqlite: " << msgHeader.subject() << endl;
+                    message msg;
+                    conn.fetch(i, msg, false);
 
 
-                string text = msg.subject() + " " + msg.content();
-                int spam = filter.Predict(text);
+                    string text = msg.subject() + " " + msg.content();
+                    int spam = filter.Predict(text);
 
-                string attName;
-                int atts = msg.attachments_size();
-                if (atts > 0) {
-                    {
-                        ofstream ofs("attachments/TEMP", std::ios::binary);
-                        msg.attachment(1, ofs, attName);
+                    string attName;
+                    int atts = msg.attachments_size();
+                    if (atts > 0) {
+                        {
+                            ofstream ofs("attachments/TEMP", std::ios::binary);
+                            msg.attachment(1, ofs, attName);
+                        }
+                        rename("attachments/TEMP", ("attachments/" + attName).c_str());
                     }
-                    rename("attachments/TEMP", ("attachments/" + attName).c_str());
-                }
 
-                string sqlInsert = string_format(
-                    "INSERT INTO mails (subject, content, time, is_spam, sender, receiver, attachment_name) VALUES (%s, %s, %d, %d, %s, %s, %s)",
-                    quote(msg.subject()).c_str(),
-                    quote(crypt_mail->Encrypt(msg.content())).c_str(),
-                    time,
-                    spam,
-                    quote(msg.from_to_string()).c_str(),
-                    quote(msg.recipients_to_string()).c_str(),
-                    quote(attName).c_str()
-                );
-                char* errmsg;
-                sqlite3_exec(db, sqlInsert.c_str(), 0, 0, &errmsg);
+                    string sqlInsert = string_format(
+                        "INSERT INTO mails (subject, content, time, is_spam, sender, receiver, attachment_name) VALUES (%s, %s, %d, %d, %s, %s, %s)",
+                        quote(msg.subject()).c_str(),
+                        quote(crypt_mail->Encrypt(msg.content())).c_str(),
+                        time,
+                        spam,
+                        quote(msg.from_to_string()).c_str(),
+                        quote(msg.recipients_to_string()).c_str(),
+                        quote(attName).c_str()
+                    );
+                    char* errmsg;
+                    sqlite3_exec(db, sqlInsert.c_str(), 0, 0, &errmsg);
+                }
+                else {
+                    break;
+                }
             }
-            else {
-                break;
+            catch (exception & ex) {
+                cout << ex.what() << endl;
             }
         }
         cout << "Fetch done." << endl;

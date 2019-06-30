@@ -15,7 +15,7 @@ vector<double> MailParser::Parse(const string& str) {
     string text = text_origin;
 
     for (auto it = text.begin(); it != text.end(); ++it) {
-        if (*it >= 0 && !isalpha(*it) && !isdigit(*it) && *it != ' ') {
+        if (*it >= 0 && !isalpha((unsigned char)*it) && !isdigit((unsigned char)*it) && *it != ' ') {
             it = text.insert(it, ' ') + 2;
             it = text.insert(it, ' ');
         }
@@ -63,7 +63,7 @@ vector<double> MailParser::Parse(const string& str) {
     text = text_origin;
     // preprocessing
     for (auto it = text.begin(); it != text.end();) {
-        if (*it >= 0 && !isalpha(*it))
+        if (*it >= 0 && !isalpha((unsigned char)*it))
             it = text.erase(it);
         else
             ++it;
